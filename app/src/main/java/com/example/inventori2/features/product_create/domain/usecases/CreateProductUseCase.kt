@@ -1,10 +1,10 @@
 package com.example.inventori2.features.product_create.domain.usecases
 
-
 import com.example.inventori2.features.product_create.data.datasources.models.ProductActionRequest
 import com.example.inventori2.features.product_create.domain.entities.ProductCreate
 import com.example.inventori2.features.product_create.domain.repositories.CreateProductRepository
 
+// Quitamos @Inject porque ya se provee en AppContainer.kt
 class CreateProductUseCase(
     private val repository: CreateProductRepository
 ) {

@@ -15,12 +15,13 @@ import com.example.inventori2.features.login.presentation.viewmodels.LoginViewMo
 fun LoginScreen(
     onNavigateToRegister: () -> Unit = {},
     onLoginSuccess: () -> Unit = {},
-    viewModel: LoginViewModel = hiltViewModel() // Inyección por Hilt
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val email by viewModel.email.collectAsStateWithLifecycle()
-    val password by viewModel.password.collectAsStateWithLifecycle()
-    val visiblePassword by viewModel.passwordVisible.collectAsStateWithLifecycle()
+    // Especificamos los tipos para ayudar al compilador
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle(LoginUiState())
+    val email by viewModel.email.collectAsStateWithLifecycle("")
+    val password by viewModel.password.collectAsStateWithLifecycle("")
+    val visiblePassword by viewModel.passwordVisible.collectAsStateWithLifecycle(false)
 
     // Navegar cuando el login es exitoso
     LaunchedEffect(uiState.isLoggedIn) {
@@ -37,7 +38,7 @@ fun LoginScreen(
             password = password,
             onPasswordChange = viewModel::onPasswordChange,
             passwordVisible = visiblePassword,
-            onChangeVisible = viewModel::onPasswordVisibilityChange,
+            onChangeVisible = { viewModel.onPasswordVisibilityChange() }, // Corregido el llamado
             onLoginClick = { viewModel.login(email, password) },
             onRegisterClick = onNavigateToRegister,
             isLoading = uiState.isLoading,

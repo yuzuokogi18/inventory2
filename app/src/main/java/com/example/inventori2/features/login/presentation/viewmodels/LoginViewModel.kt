@@ -2,32 +2,24 @@ package com.example.inventori2.features.login.presentation.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-
 import com.example.inventori2.features.login.data.datasources.models.LoginRequest
-
-import com.example.inventori2.features.login.domain.entities.User
 import com.example.inventori2.features.login.domain.usecases.LoginUseCase
+import com.example.inventori2.features.login.presentation.screens.LoginUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-data class LoginUIState(
-    val isLoading: Boolean = false,
-    val error: String? = null,
-    val isLoggedIn: Boolean = false,
-    val user: User? = null
-)
-
-class LoginViewModel(
+@HiltViewModel
+class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase
 ) : ViewModel() {
 
-    // ---------- UI STATE ----------
-    private val _uiState = MutableStateFlow(LoginUIState())
+    private val _uiState = MutableStateFlow(LoginUiState())
     val uiState = _uiState.asStateFlow()
 
-    // ---------- FORM STATE ----------
     private val _email = MutableStateFlow("")
     val email = _email.asStateFlow()
 
@@ -37,68 +29,26 @@ class LoginViewModel(
     private val _passwordVisible = MutableStateFlow(false)
     val passwordVisible = _passwordVisible.asStateFlow()
 
-    // ---------- EVENTS ----------
-    fun onEmailChange(value: String) {
-        _email.value = value
-    }
+    fun onEmailChange(value: String) { _email.value = value }
+    fun onPasswordChange(value: String) { _password.value = value }
+    fun onPasswordVisibilityChange() { _passwordVisible.value = !_passwordVisible.value }
 
-    fun onPasswordChange(value: String) {
-        _password.value = value
-    }
-
-    fun onPasswordVisibilityChange(visible: Boolean) {
-        _passwordVisible.value = visible
-    }
-
-    // ---------- ACTION ----------
-    fun login(email: String, password: String) {
-        if (email.isBlank() || password.isBlank()) {
-            _uiState.update {
-                it.copy(error = "Correo y contraseña son obligatorios")
-            }
-            return
-        }
-
+    fun login(email: String, pss: String) {
         _uiState.update { it.copy(isLoading = true, error = null) }
 
         viewModelScope.launch {
-            // Especificamos el tipo explícitamente para que fold funcione
-            val result: Result<User> = loginUseCase(
-                LoginRequest(
-                    email = email.trim(),
-                    password = password
-                )
-            )
-
+            // CORRECCIÓN: Crear el objeto LoginRequest que el UseCase espera
+            val request = LoginRequest(email = email, password = pss)
+            
+            val result = loginUseCase(request)
             _uiState.update { currentState ->
                 result.fold(
-                    onSuccess = { user ->
-                        currentState.copy(
-                            isLoading = false,
-                            user = user,
-                            isLoggedIn = true,
-                            error = null
-                        )
-                    },
-                    onFailure = { error ->
-                        currentState.copy(
-                            isLoading = false,
-                            error = error.message ?: "Error al iniciar sesión"
-                        )
-                    }
+                    onSuccess = { currentState.copy(isLoading = false, isLoggedIn = true) },
+                    onFailure = { error -> currentState.copy(isLoading = false, error = error.message) }
                 )
             }
         }
     }
 
-    fun clearError() {
-        _uiState.update { it.copy(error = null) }
-    }
-
-    fun logout() {
-        _uiState.value = LoginUIState()
-        _email.value = ""
-        _password.value = ""
-        _passwordVisible.value = false
-    }
+    fun clearError() { _uiState.update { it.copy(error = null) } }
 }
