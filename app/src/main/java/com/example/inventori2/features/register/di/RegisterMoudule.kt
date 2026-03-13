@@ -1,23 +1,5 @@
 package com.example.inventori2.features.register.di
 
-import com.example.inventori2.core.di.AppContainer
-import com.example.inventori2.features.register.domain.usecase.RegisterUseCase
-import com.example.inventori2.features.register.presentation.viewmodels.RegisterViewModelFactory
-
-
-class RegisterModule(
-    private val appContainer: AppContainer
-) {
-
-    private fun provideRegisterUseCase(): RegisterUseCase {
-        return RegisterUseCase(
-            repository = appContainer.registerRepository
-        )
-    }
-
-    fun provideRegisterViewModelFactory(): RegisterViewModelFactory {
-        return RegisterViewModelFactory(
-            registerUseCase = provideRegisterUseCase()
-        )
-    }
-}
+// Este archivo es obsoleto tras la migración a Hilt.
+// Hilt ahora provee las dependencias automáticamente desde core/di/AppContainer.kt.
+// Puedes borrar este archivo físicamente de tu proyecto.

@@ -23,24 +23,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.inventori2.core.ui.components.MainScaffold
 import com.example.inventori2.features.product_detail.domain.entities.ProductDetail
 import com.example.inventori2.features.product_detail.presentation.components.molecules.DetailRowMolecule
 import com.example.inventori2.features.product_detail.presentation.components.molecules.StatusRowMolecule
 import com.example.inventori2.features.product_detail.presentation.viewmodels.ProductDetailViewModel
-import com.example.inventori2.features.product_detail.presentation.viewmodels.ProductDetailViewModelFactory
 import com.example.inventori2.features.product_create.presentation.components.organims.TopBarOrganism
 
 @Composable
 fun ProductDetailScreen(
     productId: Int,
-    factory: ProductDetailViewModelFactory,
     onBackClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: ProductDetailViewModel = hiltViewModel() // Inyectado por Hilt
 ) {
-    val viewModel: ProductDetailViewModel = viewModel(factory = factory)
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(productId) {
@@ -103,7 +101,7 @@ fun ProductDetailContent(
         DetailRowMolecule(
             icon = Icons.Outlined.ConfirmationNumber,
             label = "Cantidad",
-            value = "${product.cantidad} unidades" // Cambiado: stock -> cantidad
+            value = "${product.cantidad} unidades"
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -116,9 +114,6 @@ fun ProductDetailContent(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Como no tenemos 'activo' en el repo de Go, 
-        // asumimos que el producto está vigente si la fecha de vencimiento no ha pasado
-        // o simplemente lo dejamos como falso por defecto por ahora.
         StatusRowMolecule(isExpired = false) 
     }
 }
@@ -126,7 +121,6 @@ fun ProductDetailContent(
 private fun formatDate(dateString: String?): String {
     if (dateString.isNullOrBlank()) return "Sin fecha"
     return try {
-        // Maneja formatos como "2026-02-20 13:36:01" o "2026-02-20"
         val cleanDate = dateString.split(" ").first().split("T").first()
         val parts = cleanDate.split("-")
         if (parts.size == 3) {

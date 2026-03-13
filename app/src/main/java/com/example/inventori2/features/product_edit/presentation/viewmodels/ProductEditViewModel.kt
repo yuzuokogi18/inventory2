@@ -6,12 +6,15 @@ import com.example.inventori2.features.product_detail.domain.usecases.GetProduct
 import com.example.inventori2.features.product_edit.domain.entities.ProductEdit
 import com.example.inventori2.features.product_edit.domain.usecases.UpdateProductUseCase
 import com.example.inventori2.features.product_edit.presentation.screens.ProductEditUIState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ProductEditViewModel(
+@HiltViewModel
+class ProductEditViewModel @Inject constructor(
     private val getProductByIdUseCase: GetProductByIdUseCase,
     private val updateProductUseCase: UpdateProductUseCase
 ) : ViewModel() {

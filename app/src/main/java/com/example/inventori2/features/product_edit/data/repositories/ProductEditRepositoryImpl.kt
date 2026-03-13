@@ -1,28 +1,31 @@
 package com.example.inventori2.features.product_edit.data.repositories
 
-import com.example.inventori2.core.datastore.TokenDataStore
-import com.example.inventori2.core.network.InventoriApi
-import com.example.inventori2.features.product_edit.data.datasources.models.ProductEditRequest
+import com.example.inventori2.core.database.dao.ProductDao
+import com.example.inventori2.core.database.entities.ProductEntity
 import com.example.inventori2.features.product_edit.domain.entities.ProductEdit
 import com.example.inventori2.features.product_edit.domain.repositories.ProductEditRepository
-import kotlinx.coroutines.flow.firstOrNull
+import javax.inject.Inject
 
-class ProductEditRepositoryImpl(
-    private val api: InventoriApi,
-    private val tokenDataStore: TokenDataStore
+class ProductEditRepositoryImpl @Inject constructor(
+    private val productDao: ProductDao
 ) : ProductEditRepository {
 
     override suspend fun updateProduct(product: ProductEdit): Result<Unit> {
         return try {
-            // Corregido: se usa getToken() en lugar de .token
-            val token = tokenDataStore.getToken().firstOrNull() ?: ""
-            val request = ProductEditRequest(
+            val currentProduct = productDao.getProductById(product.id)
+                ?: return Result.failure(Exception("Producto no encontrado"))
+
+            val updatedEntity = ProductEntity(
+                id = product.id,
                 nombre = product.nombre,
                 cantidad = product.cantidad,
                 fechaVencimiento = product.fechaVencimiento,
-                categoriaId = product.categoriaId
+                categoriaId = product.categoriaId,
+                usuarioId = currentProduct.usuarioId,
+                createdAt = currentProduct.createdAt
             )
-            api.updateProduct("Bearer $token", product.id, request)
+
+            productDao.updateProduct(updatedEntity)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)

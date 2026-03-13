@@ -2,7 +2,8 @@ package com.example.inventori2.features.register.presentation.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.inventori2.features.register.domain.usecases.RegisterUseCase
+import com.example.inventori2.features.register.data.datasources.models.RegisterRequest
+import com.example.inventori2.features.register.domain.usecase.RegisterUseCase
 import com.example.inventori2.features.register.presentation.screens.RegisterUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,10 +37,16 @@ class RegisterViewModel @Inject constructor(
         _uiState.update { it.copy(isLoading = true, error = null) }
 
         viewModelScope.launch {
-            val result = registerUseCase(nombre, email, pss)
+            val request = RegisterRequest(
+                nombre = nombre,
+                email = email,
+                password = pss
+            )
+            
+            val result = registerUseCase(request)
             _uiState.update { currentState ->
                 result.fold(
-                    onSuccess = { currentState.copy(isLoading = false, isSuccess = true) },
+                    onSuccess = { currentState.copy(isLoading = false, isRegistered = true) }, // Corregido: isSuccess -> isRegistered
                     onFailure = { error -> currentState.copy(isLoading = false, error = error.message) }
                 )
             }

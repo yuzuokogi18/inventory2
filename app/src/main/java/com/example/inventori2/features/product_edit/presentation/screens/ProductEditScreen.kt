@@ -6,23 +6,20 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.inventori2.core.ui.components.MainScaffold
-import com.example.inventori2.features.product_create.presentation.components.organims.ProductFormOrganism
 import com.example.inventori2.features.product_create.presentation.components.organims.TopBarOrganism
+import com.example.inventori2.features.product_edit.presentation.components.organims.ProductFormOrganism
 import com.example.inventori2.features.product_edit.presentation.viewmodels.ProductEditViewModel
-import com.example.inventori2.features.product_edit.presentation.viewmodels.ProductEditViewModelFactory
 
 @Composable
 fun ProductEditScreen(
     productId: Int,
-    factory: ProductEditViewModelFactory,
     onBackClick: () -> Unit,
-    onSuccess: () -> Unit
+    onSuccess: () -> Unit,
+    viewModel: ProductEditViewModel = hiltViewModel() // Inyectado por Hilt
 ) {
-    val viewModel: ProductEditViewModel = viewModel(factory = factory)
-
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val nombre by viewModel.nombre.collectAsStateWithLifecycle()
     val cantidad by viewModel.cantidad.collectAsStateWithLifecycle()

@@ -1,30 +1,28 @@
 package com.example.inventori2.features.login.data.repositories
 
+import com.example.inventori2.core.database.dao.UserDao
 import com.example.inventori2.core.datastore.TokenDataStore
-import com.example.inventori2.core.network.InventoriApi
-import com.example.inventori2.features.login.data.datasources.mapper.toDomain
 import com.example.inventori2.features.login.data.datasources.models.LoginRequest
 import com.example.inventori2.features.login.domain.entities.User
 import com.example.inventori2.features.login.domain.repositories.LoginRepository
 
-
-
+// Quitamos @Inject porque ya se provee en AppContainer.kt
 class LoginRepositoryImpl(
-    private val api: InventoriApi,
+    private val userDao: UserDao,
     private val tokenDataStore: TokenDataStore
 ) : LoginRepository {
 
     override suspend fun login(user: LoginRequest): User {
-        val response = api.loginUser(user)
+        val userEntity = userDao.login(user.email, user.password)
+            ?: throw Exception("Credenciales incorrectas")
 
-        // Guardar token
-        tokenDataStore.saveToken(response.token)
+        val userDomain = User(
+            id = userEntity.id,
+            nombre = userEntity.nombre,
+            email = userEntity.email
+        )
 
-        // Mapear user DTO -> Domain
-        val userDomain = response.user.toDomain()
-
-
-        // Guardar user en DataStore
+        tokenDataStore.saveToken("local_jwt_token_${userEntity.id}")
         tokenDataStore.saveUser(userDomain)
 
         return userDomain

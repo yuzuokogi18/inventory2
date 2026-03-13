@@ -1,22 +1,5 @@
 package com.example.inventori2.features.product_list.di
 
-import com.example.inventori2.core.di.AppContainer
-import com.example.inventori2.features.product_list.domain.usecases.GetAllProductUseCase
-import com.example.inventori2.features.product_list.presentation.viewmodels.ProductViewModelFactory
-
-class ProductModule(
-    private val appContainer: AppContainer
-) {
-
-    private fun provideGetAllProductsUseCase(): GetAllProductUseCase {
-        return GetAllProductUseCase(
-            repository = appContainer.productRepository
-        )
-    }
-
-    fun provideProductViewModelFactory(): ProductViewModelFactory {
-        return ProductViewModelFactory(
-            getAllProductUseCase = provideGetAllProductsUseCase()
-        )
-    }
-}
+// Este archivo es obsoleto tras la migración a Hilt.
+// Hilt ahora provee las dependencias automáticamente desde core/di/AppContainer.kt.
+// Puedes borrar este archivo físicamente de tu proyecto.
