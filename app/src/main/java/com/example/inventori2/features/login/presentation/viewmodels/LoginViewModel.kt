@@ -1,7 +1,9 @@
 package com.example.inventori2.features.login.presentation.viewmodels
 
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.inventori2.core.hardware.domain.BiometriaManager
 import com.example.inventori2.features.login.data.datasources.models.LoginRequest
 import com.example.inventori2.features.login.domain.usecases.LoginUseCase
 import com.example.inventori2.features.login.presentation.screens.LoginUiState
@@ -14,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val loginUseCase: LoginUseCase
+    private val loginUseCase: LoginUseCase,
+    private val biometriaManager: BiometriaManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginUiState())
@@ -35,11 +38,8 @@ class LoginViewModel @Inject constructor(
 
     fun login(email: String, pss: String) {
         _uiState.update { it.copy(isLoading = true, error = null) }
-
         viewModelScope.launch {
-            // CORRECCIÓN: Crear el objeto LoginRequest que el UseCase espera
             val request = LoginRequest(email = email, password = pss)
-            
             val result = loginUseCase(request)
             _uiState.update { currentState ->
                 result.fold(
@@ -47,6 +47,27 @@ class LoginViewModel @Inject constructor(
                     onFailure = { error -> currentState.copy(isLoading = false, error = error.message) }
                 )
             }
+        }
+    }
+
+    // Hardware: Autenticación Biométrica
+    fun loginConBiometria(activity: FragmentActivity) {
+        if (biometriaManager.estaDisponible()) {
+            biometriaManager.autenticar(
+                activity = activity,
+                titulo = "Inicio de Sesión",
+                subtitulo = "Usa tu huella para entrar al inventario",
+                onSuccess = {
+                    // Si la huella es correcta, marcamos como logueado
+                    // En una app real buscaríamos al último usuario guardado
+                    _uiState.update { it.copy(isLoggedIn = true) }
+                },
+                onError = { _, error ->
+                    _uiState.update { it.copy(error = error.toString()) }
+                }
+            )
+        } else {
+            _uiState.update { it.copy(error = "Biometría no disponible en este dispositivo") }
         }
     }
 

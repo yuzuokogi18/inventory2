@@ -9,7 +9,8 @@ data class ProductCreate(
     val fecha_vencimiento: String,
     val categoriaId: Int?,
     val usuarioId: Int,
-    val createdAt: String? // Ahora es nullable para evitar el error
+    val createdAt: String?,
+    val imagenUri: String? = null // Nuevo campo para la imagen
 ) {
     companion object {
         fun new(
@@ -18,7 +19,8 @@ data class ProductCreate(
             cantidad: Int,
             fecha_vencimiento: String,
             categoriaId: Int?,
-            usuarioId: Int
+            usuarioId: Int,
+            imagenUri: String? = null
         ): ProductCreate {
             return ProductCreate(
                 id = id,
@@ -27,7 +29,8 @@ data class ProductCreate(
                 fecha_vencimiento = fecha_vencimiento,
                 categoriaId = categoriaId,
                 usuarioId = usuarioId,
-                createdAt = LocalDateTime.now().toString()
+                createdAt = LocalDateTime.now().toString(),
+                imagenUri = imagenUri
             )
         }
     }
