@@ -13,6 +13,8 @@ import com.example.inventori2.features.product_create.presentation.screens.Creat
 import com.example.inventori2.features.product_detail.presentation.screens.ProductDetailScreen
 import com.example.inventori2.features.product_edit.presentation.screens.ProductEditScreen
 import com.example.inventori2.features.product_list.presentation.screens.ProductsScreen
+import com.example.inventori2.features.dashboard.presentation.screens.DashboardScreen
+import com.example.inventori2.features.profile.presentation.screens.ProfileScreen
 
 @Composable
 fun AppNavGraph(
@@ -27,7 +29,7 @@ fun AppNavGraph(
             LoginScreen(
                 onNavigateToRegister = { navController.navigate(AppRoutes.Register.route) },
                 onLoginSuccess = {
-                    navController.navigate(AppRoutes.ProductList.route) {
+                    navController.navigate(AppRoutes.Dashboard.route) {
                         popUpTo(AppRoutes.Login.route) { inclusive = true }
                     }
                 }
@@ -46,6 +48,26 @@ fun AppNavGraph(
             )
         }
 
+        // 🔥 DASHBOARD (FEATURE 1)
+        composable(AppRoutes.Dashboard.route) {
+            DashboardScreen(
+                onNavigateToList = { navController.navigate(AppRoutes.ProductList.route) },
+                onNavigateToProfile = { navController.navigate(AppRoutes.Profile.route) } // Vinculado
+            )
+        }
+
+        // 🔥 PROFILE (FEATURE 2)
+        composable(AppRoutes.Profile.route) {
+            ProfileScreen(
+                onLogout = {
+                    navController.navigate(AppRoutes.Login.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                },
+                onBack = { navController.popBackStack() }
+            )
+        }
+
         // 🔥 PRODUCT LIST
         composable(AppRoutes.ProductList.route) {
             ProductsScreen(
@@ -55,41 +77,25 @@ fun AppNavGraph(
             )
         }
 
-        // 🔥 CREATE PRODUCT
+        // ... resto de rutas (Create, Detail, Edit) se mantienen igual
         composable(AppRoutes.CreateProduct.route) {
-            CreateProductScreen(
-                onBackClick = { navController.popBackStack() },
-                onSuccess = {
-                    navController.navigate(AppRoutes.ProductList.route) {
-                        popUpTo(AppRoutes.ProductList.route) { inclusive = true }
-                    }
-                }
-            )
+            CreateProductScreen(onBackClick = { navController.popBackStack() }, onSuccess = { navController.popBackStack() })
         }
 
-        // 🔥 PRODUCT DETAIL
         composable(
             route = AppRoutes.ProductDetail.route,
             arguments = listOf(navArgument("productId") { type = NavType.IntType })
         ) { backStackEntry ->
             val productId = backStackEntry.arguments?.getInt("productId") ?: 0
-            ProductDetailScreen(
-                productId = productId,
-                onBackClick = { navController.popBackStack() }
-            )
+            ProductDetailScreen(productId = productId, onBackClick = { navController.popBackStack() })
         }
 
-        // 🔥 PRODUCT EDIT
         composable(
             route = AppRoutes.EditProduct.route,
             arguments = listOf(navArgument("productId") { type = NavType.IntType })
         ) { backStackEntry ->
             val productId = backStackEntry.arguments?.getInt("productId") ?: 0
-            ProductEditScreen(
-                productId = productId,
-                onBackClick = { navController.popBackStack() },
-                onSuccess = { navController.popBackStack() }
-            )
+            ProductEditScreen(productId = productId, onBackClick = { navController.popBackStack() }, onSuccess = { navController.popBackStack() })
         }
     }
 }

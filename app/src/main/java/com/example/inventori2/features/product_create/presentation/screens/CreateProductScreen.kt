@@ -17,13 +17,14 @@ import com.example.inventori2.features.product_create.presentation.components.or
 fun CreateProductScreen(
     onBackClick: () -> Unit,
     onSuccess: () -> Unit,
-    viewModel: CreateProductViewModel = hiltViewModel() // Inyectado por Hilt
+    viewModel: CreateProductViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val nombre by viewModel.nombre.collectAsStateWithLifecycle()
-    val cantidad by viewModel.cantidad.collectAsStateWithLifecycle()
-    val fechaVencimiento by viewModel.fechaVencimiento.collectAsStateWithLifecycle()
-    val categoriaId by viewModel.categoriaId.collectAsStateWithLifecycle()
+    val nombre by viewModel.nombre.collectAsStateWithLifecycle("")
+    val cantidad by viewModel.cantidad.collectAsStateWithLifecycle("")
+    val fechaVencimiento by viewModel.fechaVencimiento.collectAsStateWithLifecycle("")
+    val categoriaId by viewModel.categoriaId.collectAsStateWithLifecycle(null)
+    val imageUri by viewModel.imageUri.collectAsStateWithLifecycle(null) // Nuevo para hardware
 
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -60,6 +61,12 @@ fun CreateProductScreen(
             onFechaVencimientoChange = viewModel::onFechaVencimientoChange,
             categoriaId = categoriaId,
             onCategoriaSelected = viewModel::onCategoriaChange,
+            
+            // --- PARÁMETROS DE HARDWARE ---
+            imageUri = imageUri,
+            onImageSelected = viewModel::onImageSelected,
+            getCameraUri = { viewModel.getCameraUri() },
+            
             onCancel = onBackClick,
             onSave = { viewModel.createProduct() },
             isLoading = uiState.isLoading,

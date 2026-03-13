@@ -63,7 +63,7 @@ dependencies {
     // DataStore
     implementation("androidx.datastore:datastore-preferences:1.1.1")
 
-    // Retrofit (Opcional si migraste todo a Room)
+    // Retrofit (Añadidas para que compile InventoriApi.kt)
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
@@ -76,10 +76,16 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
-    // Room - CORREGIDO: Nombres alineados con libs.versions.toml
+    // Room
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
+
+    // Biometric
+    implementation(libs.androidx.biometric.ktx)
+    
+    // Coil (Carga de imágenes)
+    implementation(libs.coil.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

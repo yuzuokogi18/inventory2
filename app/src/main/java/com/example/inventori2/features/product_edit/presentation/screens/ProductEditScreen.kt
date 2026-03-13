@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.inventori2.core.ui.components.MainScaffold
+import com.example.inventori2.features.product_create.presentation.components.organims.ProductFormOrganism
 import com.example.inventori2.features.product_create.presentation.components.organims.TopBarOrganism
 import com.example.inventori2.features.product_edit.presentation.components.organims.ProductFormOrganism
 import com.example.inventori2.features.product_edit.presentation.viewmodels.ProductEditViewModel
@@ -18,13 +19,16 @@ fun ProductEditScreen(
     productId: Int,
     onBackClick: () -> Unit,
     onSuccess: () -> Unit,
-    viewModel: ProductEditViewModel = hiltViewModel() // Inyectado por Hilt
+    viewModel: ProductEditViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val nombre by viewModel.nombre.collectAsStateWithLifecycle()
-    val cantidad by viewModel.cantidad.collectAsStateWithLifecycle()
-    val fechaVencimiento by viewModel.fechaVencimiento.collectAsStateWithLifecycle()
-    val categoriaId by viewModel.categoriaId.collectAsStateWithLifecycle()
+    val nombre by viewModel.nombre.collectAsStateWithLifecycle("")
+    val cantidad by viewModel.cantidad.collectAsStateWithLifecycle("")
+    val fechaVencimiento by viewModel.fechaVencimiento.collectAsStateWithLifecycle("")
+    val categoriaId by viewModel.categoriaId.collectAsStateWithLifecycle(null)
+    
+    // Soporte para hardware en edición
+    val imageUri by viewModel.imageUri.collectAsStateWithLifecycle(null)
 
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -65,6 +69,12 @@ fun ProductEditScreen(
             onFechaVencimientoChange = viewModel::onFechaVencimientoChange,
             categoriaId = categoriaId,
             onCategoriaSelected = viewModel::onCategoriaChange,
+            
+            // hardware vinculado
+            imageUri = imageUri,
+            onImageSelected = viewModel::onImageSelected,
+            getCameraUri = { viewModel.getCameraUri() },
+            
             onCancel = onBackClick,
             onSave = { viewModel.updateProduct() },
             isLoading = uiState.isLoading,
