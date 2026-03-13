@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.example.inventori2"
-    compileSdk = 35
+    compileSdk = 36 
 
     defaultConfig {
         applicationId = "com.example.inventori2"
@@ -63,7 +63,7 @@ dependencies {
     // DataStore
     implementation("androidx.datastore:datastore-preferences:1.1.1")
 
-    // Retrofit
+    // Retrofit (Opcional si migraste todo a Room)
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
@@ -76,6 +76,11 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
+    // Room - CORREGIDO: Nombres alineados con libs.versions.toml
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -83,6 +88,5 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     
-    // Corregido: referencia manual si el alias falla
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 }

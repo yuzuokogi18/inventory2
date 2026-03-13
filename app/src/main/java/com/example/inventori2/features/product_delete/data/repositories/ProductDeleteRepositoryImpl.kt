@@ -1,19 +1,16 @@
 package com.example.inventori2.features.product_delete.data.repositories
 
-import com.example.inventori2.core.datastore.TokenDataStore
-import com.example.inventori2.core.network.InventoriApi
+import com.example.inventori2.core.database.dao.ProductDao
 import com.example.inventori2.features.product_delete.domain.repositories.ProductDeleteRepository
-import kotlinx.coroutines.flow.firstOrNull
+import javax.inject.Inject
 
-class ProductDeleteRepositoryImpl(
-    private val api: InventoriApi,
-    private val tokenDataStore: TokenDataStore
+class ProductDeleteRepositoryImpl @Inject constructor(
+    private val productDao: ProductDao
 ) : ProductDeleteRepository {
 
     override suspend fun deleteProduct(productId: Int): Result<Unit> {
         return try {
-            val token = tokenDataStore.getToken().firstOrNull() ?: ""
-            api.deleteProduct("Bearer $token", productId)
+            productDao.deleteProductById(productId)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)

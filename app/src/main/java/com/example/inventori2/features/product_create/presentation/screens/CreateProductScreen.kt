@@ -6,23 +6,19 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.inventori2.core.ui.components.MainScaffold
 import com.example.inventori2.features.product_create.presentation.components.organims.ProductFormOrganism
 import com.example.inventori2.features.product_create.presentation.viewmodels.CreateProductViewModel
-import com.example.inventori2.features.product_create.presentation.viewmodels.CreateProductViewModelFactory
 import com.example.inventori2.features.product_create.presentation.components.organims.TopBarOrganism
 
 @Composable
 fun CreateProductScreen(
-    factory: CreateProductViewModelFactory,
     onBackClick: () -> Unit,
-    onSuccess: () -> Unit
+    onSuccess: () -> Unit,
+    viewModel: CreateProductViewModel = hiltViewModel() // Inyectado por Hilt
 ) {
-
-    val viewModel: CreateProductViewModel = viewModel(factory = factory)
-
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val nombre by viewModel.nombre.collectAsStateWithLifecycle()
     val cantidad by viewModel.cantidad.collectAsStateWithLifecycle()
@@ -31,7 +27,6 @@ fun CreateProductScreen(
 
     val snackbarHostState = remember { SnackbarHostState() }
 
-    // 🔴 Mostrar error
     LaunchedEffect(uiState.error) {
         uiState.error?.let {
             snackbarHostState.showSnackbar(it)
@@ -39,7 +34,6 @@ fun CreateProductScreen(
         }
     }
 
-    // 🟢 Cuando se crea correctamente
     LaunchedEffect(uiState.isSuccess) {
         if (uiState.isSuccess) {
             onSuccess()
@@ -53,29 +47,22 @@ fun CreateProductScreen(
                 onBackClick = onBackClick
             )
         },
-        snackbarHost = {   // ✅ corregido aquí
+        snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
         }
     ) { paddingValues ->
-
         ProductFormOrganism(
             nombre = nombre,
             onNombreChange = viewModel::onNombreChange,
-
             cantidad = cantidad,
             onCantidadChange = viewModel::onCantidadChange,
-
             fechaVencimiento = fechaVencimiento,
             onFechaVencimientoChange = viewModel::onFechaVencimientoChange,
-
             categoriaId = categoriaId,
             onCategoriaSelected = viewModel::onCategoriaChange,
-
             onCancel = onBackClick,
             onSave = { viewModel.createProduct() },
-
             isLoading = uiState.isLoading,
-
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)

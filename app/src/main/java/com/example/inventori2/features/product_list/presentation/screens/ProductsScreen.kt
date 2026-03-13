@@ -21,40 +21,34 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.inventori2.features.product_delete.presentation.screens.ProductDeleteScreen
 import com.example.inventori2.features.product_delete.presentation.viewmodels.ProductDeleteViewModel
-import com.example.inventori2.features.product_delete.presentation.viewmodels.ProductDeleteViewModelFactory
 import com.example.inventori2.features.product_list.presentation.components.organims.ProductsTopBar
 import com.example.inventori2.features.product_list.presentation.viewmodels.ProductViewModel
-import com.example.inventori2.features.product_list.presentation.viewmodels.ProductViewModelFactory
 import com.example.inventori2.features.product_list.presentation.components.organims.ProductCard
 
 @Composable
 fun ProductsScreen(
-    factory: ProductViewModelFactory,
-    deleteFactory: ProductDeleteViewModelFactory,
     onEditClick: (Int) -> Unit = {},
     onViewClick: (Int) -> Unit = {},
     onCreateProductClick: () -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: ProductViewModel = hiltViewModel(), // Inyectado por Hilt
+    deleteViewModel: ProductDeleteViewModel = hiltViewModel() // Inyectado por Hilt
 ) {
-    val viewModel: ProductViewModel = viewModel(factory = factory)
-    val deleteViewModel: ProductDeleteViewModel = viewModel(factory = deleteFactory)
-    
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val deleteError by deleteViewModel.error.collectAsStateWithLifecycle()
 
     val snackbarHostState = remember { SnackbarHostState() }
 
-    // Estado para el Screen de eliminación
     var showDeleteScreen by remember { mutableStateOf(false) }
     var selectedProductId by remember { mutableIntStateOf(-1) }
     var selectedProductName by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
-        viewModel.loadProducts()
+        viewModel.getProducts()
     }
 
     LaunchedEffect(deleteError) {
@@ -64,7 +58,6 @@ fun ProductsScreen(
         }
     }
 
-    // 🔴 Screen de borrado
     ProductDeleteScreen(
         show = showDeleteScreen,
         productId = selectedProductId,
@@ -73,7 +66,7 @@ fun ProductsScreen(
         onDismiss = { showDeleteScreen = false },
         onDeleteSuccess = {
             showDeleteScreen = false
-            viewModel.loadProducts()
+            viewModel.getProducts()
         }
     )
 

@@ -2,6 +2,7 @@ package com.example.inventori2.features.login.presentation.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.inventori2.features.login.data.datasources.models.LoginRequest
 import com.example.inventori2.features.login.domain.usecases.LoginUseCase
 import com.example.inventori2.features.login.presentation.screens.LoginUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,7 +37,10 @@ class LoginViewModel @Inject constructor(
         _uiState.update { it.copy(isLoading = true, error = null) }
 
         viewModelScope.launch {
-            val result = loginUseCase(email, pss)
+            // CORRECCIÓN: Crear el objeto LoginRequest que el UseCase espera
+            val request = LoginRequest(email = email, password = pss)
+            
+            val result = loginUseCase(request)
             _uiState.update { currentState ->
                 result.fold(
                     onSuccess = { currentState.copy(isLoading = false, isLoggedIn = true) },

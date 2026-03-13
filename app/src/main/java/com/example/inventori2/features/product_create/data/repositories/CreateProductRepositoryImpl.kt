@@ -1,50 +1,42 @@
 package com.example.inventori2.features.product_create.data.repositories
 
-import android.util.Log
+import com.example.inventori2.core.database.dao.ProductDao
+import com.example.inventori2.core.database.entities.ProductEntity
 import com.example.inventori2.core.datastore.TokenDataStore
-import com.example.inventori2.core.network.InventoriApi
-import com.example.inventori2.features.product_create.data.datasources.mapper.toDomain
 import com.example.inventori2.features.product_create.data.datasources.models.ProductActionRequest
 import com.example.inventori2.features.product_create.domain.entities.ProductCreate
 import com.example.inventori2.features.product_create.domain.repositories.CreateProductRepository
-import kotlinx.coroutines.flow.first
-import retrofit2.HttpException
+import kotlinx.coroutines.flow.firstOrNull
+import java.time.LocalDateTime
 
 class CreateProductRepositoryImpl(
-    private val api: InventoriApi,
+    private val productDao: ProductDao,
     private val tokenDataStore: TokenDataStore
 ) : CreateProductRepository {
 
-    override suspend fun createProduct(
-        product: ProductActionRequest
-    ): ProductCreate {
+    override suspend fun createProduct(product: ProductActionRequest): ProductCreate {
+        val user = tokenDataStore.getUser().firstOrNull() 
+            ?: throw Exception("Usuario no autenticado")
 
-        return try {
-            // Obtener token
-            val token = tokenDataStore.getToken().first()
-            if (token.isNullOrBlank()) {
-                throw Exception("Token vacío o no encontrado")
-            }
+        val productEntity = ProductEntity(
+            nombre = product.nombre,
+            cantidad = product.cantidad,
+            fechaVencimiento = product.fechaVencimiento,
+            categoriaId = product.categoriaId,
+            usuarioId = user.id,
+            createdAt = LocalDateTime.now().toString()
+        )
 
-            Log.d("TOKEN", token)
+        productDao.insertProduct(productEntity)
 
-            // Llamada al API
-            val response = api.createProduct(
-                token = "Bearer $token",
-                product = product
-            )
-
-            // Mapear DTO a dominio, asegurando createdAt
-            response.producto?.toDomain()
-                ?: throw Exception("Producto viene null desde el backend")
-
-        } catch (e: HttpException) {
-            val errorBody = e.response()?.errorBody()?.string()
-            Log.e("HTTP_400", errorBody ?: "Sin body")
-            throw Exception(errorBody ?: "Error HTTP ${e.code()}")
-        } catch (e: Exception) {
-            Log.e("EXCEPTION", e.message ?: "Error desconocido")
-            throw e
-        }
+        return ProductCreate(
+            id = 0, 
+            nombre = product.nombre,
+            cantidad = product.cantidad,
+            fecha_vencimiento = product.fechaVencimiento,
+            categoriaId = product.categoriaId,
+            usuarioId = user.id,
+            createdAt = productEntity.createdAt
+        )
     }
 }
