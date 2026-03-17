@@ -6,7 +6,7 @@ import com.example.inventori2.features.login.data.datasources.models.LoginReques
 import com.example.inventori2.features.login.domain.entities.User
 import com.example.inventori2.features.login.domain.repositories.LoginRepository
 
-// Quitamos @Inject porque ya se provee en AppContainer.kt
+
 class LoginRepositoryImpl(
     private val userDao: UserDao,
     private val tokenDataStore: TokenDataStore

@@ -19,7 +19,7 @@ fun ProductDeleteScreen(
     val isDeleted by viewModel.isDeleted.collectAsStateWithLifecycle()
     val error by viewModel.error.collectAsStateWithLifecycle()
 
-    // Manejar éxito del borrado
+
     LaunchedEffect(isDeleted) {
         if (isDeleted) {
             onDeleteSuccess()

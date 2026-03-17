@@ -11,6 +11,6 @@ fun ProductResponse.toDomain(): Product {
         fechaVencimiento = this.fechaVencimiento,
         categoriaId = this.categoriaId,
         usuarioId = this.usuarioId,
-        createdAt = this.createdAt ?: "" // Aseguramos que no sea null al pasar a la entidad si lo deseamos, o simplemente lo dejamos nullable
+        createdAt = this.createdAt ?: ""
     )
 }

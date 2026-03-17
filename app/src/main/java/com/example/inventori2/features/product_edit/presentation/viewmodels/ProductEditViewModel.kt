@@ -19,7 +19,7 @@ import javax.inject.Inject
 class ProductEditViewModel @Inject constructor(
     private val getProductByIdUseCase: GetProductByIdUseCase,
     private val updateProductUseCase: UpdateProductUseCase,
-    private val camaraManager: CamaraManager // Hardware añadido
+    private val camaraManager: CamaraManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ProductEditUIState())

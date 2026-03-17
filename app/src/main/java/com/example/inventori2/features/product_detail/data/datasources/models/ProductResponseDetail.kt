@@ -10,11 +10,10 @@ data class ProductDetailDTO(
     val nombre: String,
 
     @SerializedName("cantidad")
-    val cantidad: Int, // Coincide con 'cantidad' en Go
+    val cantidad: Int,
 
     @SerializedName("fecha_vencimiento")
-    val fechaVencimiento: String?, // Coincide con 'fecha_vencimiento' en Go
-
+    val fechaVencimiento: String?,
     @SerializedName("categoria_id")
     val categoriaId: Int?,
 

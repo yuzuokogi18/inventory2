@@ -7,7 +7,6 @@ import com.example.inventori2.core.database.dao.UserDao
 import com.example.inventori2.core.database.entities.ProductEntity
 import com.example.inventori2.core.database.entities.UserEntity
 
-// Subimos la versión a 3 para limpiar cualquier residuo de esquemas anteriores
 @Database(entities = [ProductEntity::class, UserEntity::class], version = 3, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun productDao(): ProductDao

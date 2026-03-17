@@ -24,5 +24,5 @@ data class ProductResponse(
     val usuarioId: Int,
 
     @SerializedName("created_at")
-    val createdAt: String? // Cambiado a nullable
+    val createdAt: String?
 )

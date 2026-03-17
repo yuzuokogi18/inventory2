@@ -8,9 +8,9 @@ fun ProductDetailDTO.toDomain(): ProductDetail {
     return ProductDetail(
         id = this.id,
         nombre = this.nombre,
-        cantidad = this.cantidad, // Corregido: antes era stock
-        fechaVencimiento = this.fechaVencimiento, // Corregido: antes era fechaCaducidad
+        cantidad = this.cantidad,
+        fechaVencimiento = this.fechaVencimiento,
         categoriaId = this.categoriaId,
-        usuarioId = this.usuarioId // Corregido: antes era stock
+        usuarioId = this.usuarioId
     )
 }

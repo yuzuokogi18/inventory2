@@ -20,7 +20,7 @@ import javax.inject.Inject
 class CreateProductViewModel @Inject constructor(
     private val createProductUseCase: CreateProductUseCase,
     private val camaraManager: CamaraManager,
-    private val galeriaManager: GaleriaManager, // Hardware: Galería
+    private val galeriaManager: GaleriaManager,
     private val notificacionManager: NotificacionManager
 ) : ViewModel() {
 
@@ -39,7 +39,6 @@ class CreateProductViewModel @Inject constructor(
     private val _categoriaId = MutableStateFlow<Int?>(null)
     val categoriaId = _categoriaId.asStateFlow()
 
-    // URI de la imagen seleccionada por hardware (Cámara o Galería)
     private val _imageUri = MutableStateFlow<Uri?>(null)
     val imageUri = _imageUri.asStateFlow()
 
@@ -67,7 +66,7 @@ class CreateProductViewModel @Inject constructor(
                 cantidad = cantidadInt,
                 fechaVencimiento = _fechaVencimiento.value,
                 categoriaId = _categoriaId.value
-                // Aquí podrías enviar el imagenUri.toString() si tu UseCase lo soportara
+
             )
 
             val result = createProductUseCase(productRequest)

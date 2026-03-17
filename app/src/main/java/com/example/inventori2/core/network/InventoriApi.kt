@@ -47,7 +47,6 @@ interface InventoriApi {
         @Body product: ProductEditRequest
     ): ProductActionResponse
 
-    // 🔥 DELETE PRODUCT (NUEVO)
     @DELETE("api/productos/{id}")
     suspend fun deleteProduct(
         @Header("Authorization") token: String,

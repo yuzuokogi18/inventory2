@@ -23,7 +23,6 @@ fun LoginScreen(
     val password by viewModel.password.collectAsStateWithLifecycle("")
     val visiblePassword by viewModel.passwordVisible.collectAsStateWithLifecycle(false)
     
-    // Obtenemos la actividad necesaria para el hardware biométrico
     val activity = LocalContext.current as? FragmentActivity
 
     LaunchedEffect(uiState.isLoggedIn) {
@@ -42,7 +41,7 @@ fun LoginScreen(
             passwordVisible = visiblePassword,
             onChangeVisible = { viewModel.onPasswordVisibilityChange() },
             onLoginClick = { viewModel.login(email, password) },
-            onBiometricClick = { activity?.let { viewModel.loginConBiometria(it) } }, // hardware vinculado
+            onBiometricClick = { activity?.let { viewModel.loginConBiometria(it) } },
             onRegisterClick = onNavigateToRegister,
             isLoading = uiState.isLoading,
             error = uiState.error,

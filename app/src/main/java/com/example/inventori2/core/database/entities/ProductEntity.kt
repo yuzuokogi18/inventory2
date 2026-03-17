@@ -13,5 +13,5 @@ data class ProductEntity(
     val categoriaId: Int? = null,
     val usuarioId: Int = 0,
     val createdAt: String? = null,
-    val imagenUri: String? = null // Nuevo campo para la imagen del hardware
+    val imagenUri: String? = null
 )

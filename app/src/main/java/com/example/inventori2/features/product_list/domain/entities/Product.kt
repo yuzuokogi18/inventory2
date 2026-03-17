@@ -8,5 +8,5 @@ data class Product(
     val fechaVencimiento: String,
     val categoriaId: Int?,
     val usuarioId: Int,
-    val createdAt: String? // Cambiado a nullable
+    val createdAt: String?
 )

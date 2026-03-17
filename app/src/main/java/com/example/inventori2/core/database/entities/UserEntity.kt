@@ -9,5 +9,5 @@ data class UserEntity(
     val id: Int = 0,
     val nombre: String,
     val email: String,
-    val contrasena: String // Almacenamos la contraseña localmente para el login simulado
+    val contrasena: String
 )

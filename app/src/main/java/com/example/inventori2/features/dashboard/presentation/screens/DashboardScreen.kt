@@ -35,7 +35,7 @@ fun DashboardScreen(
         topAppBar = {
             TopBarOrganism(
                 title = "Resumen de Inventario",
-                onBackClick = {} // En el dashboard no hay back, o podrías quitar el icono
+                onBackClick = {}
             )
         }
     ) { paddingValues ->
@@ -46,7 +46,6 @@ fun DashboardScreen(
                 .padding(paddingValues)
                 .padding(16.dp)
         ) {
-            // Fila superior con botón de perfil
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End

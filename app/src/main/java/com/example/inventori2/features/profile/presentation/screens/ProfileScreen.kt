@@ -55,7 +55,7 @@ fun ProfileScreen(
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Avatar
+
             Box(
                 modifier = Modifier
                     .size(100.dp)
@@ -72,8 +72,6 @@ fun ProfileScreen(
             }
 
             Spacer(modifier = Modifier.height(24.dp))
-
-            // Información del usuario
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
@@ -98,7 +96,6 @@ fun ProfileScreen(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            // Botón cerrar sesión
             Button(
                 onClick = { viewModel.logout() },
                 modifier = Modifier.fillMaxWidth(),

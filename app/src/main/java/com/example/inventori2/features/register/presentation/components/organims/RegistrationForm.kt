@@ -37,7 +37,6 @@ fun RegistrationForm(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
-    // Mostrar error en Snackbar
     LaunchedEffect(error) {
         error?.let {
             snackbarHostState.showSnackbar(it)
@@ -96,14 +95,12 @@ fun RegistrationForm(
             Spacer(modifier = Modifier.height(24.dp))
         }
 
-        // Indicador de carga
         if (isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center)
             )
         }
 
-        // Snackbar para errores
         SnackbarHost(
             hostState = snackbarHostState,
             modifier = Modifier.align(Alignment.BottomCenter)

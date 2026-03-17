@@ -30,7 +30,7 @@ class DashboardViewModel @Inject constructor(
 
     private fun loadStatistics() {
         viewModelScope.launch {
-            // Obtenemos el usuario de forma segura
+
             tokenDataStore.getUser().filterNotNull().flatMapLatest { user ->
                 productDao.getAllProducts(user.id)
             }.collect { products ->

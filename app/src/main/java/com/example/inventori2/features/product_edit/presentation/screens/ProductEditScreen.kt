@@ -27,7 +27,7 @@ fun ProductEditScreen(
     val fechaVencimiento by viewModel.fechaVencimiento.collectAsStateWithLifecycle("")
     val categoriaId by viewModel.categoriaId.collectAsStateWithLifecycle(null)
     
-    // Soporte para hardware en edición
+
     val imageUri by viewModel.imageUri.collectAsStateWithLifecycle(null)
 
     val snackbarHostState = remember { SnackbarHostState() }

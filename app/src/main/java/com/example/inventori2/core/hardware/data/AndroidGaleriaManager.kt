@@ -4,5 +4,8 @@ import com.example.inventori2.core.hardware.domain.GaleriaManager
 import javax.inject.Inject
 
 class AndroidGaleriaManager @Inject constructor() : GaleriaManager {
-    // Implementación para manejo de galería si fuera necesario
+    
+    override fun getMimeType(): String {
+        return "image/*"
+    }
 }

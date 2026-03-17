@@ -20,10 +20,10 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun StatusBadgeAtom(
-    isExpired: Boolean, // true si el producto está caducado
+    isExpired: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val isActive = !isExpired // Vigente = no caducado
+    val isActive = !isExpired
     Row(
         modifier = modifier
             .background(

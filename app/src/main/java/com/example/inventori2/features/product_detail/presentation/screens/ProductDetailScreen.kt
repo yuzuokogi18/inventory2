@@ -37,7 +37,7 @@ fun ProductDetailScreen(
     productId: Int,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ProductDetailViewModel = hiltViewModel() // Inyectado por Hilt
+    viewModel: ProductDetailViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
