@@ -50,7 +50,6 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    // Hardware: Autenticación Biométrica
     fun loginConBiometria(activity: FragmentActivity) {
         if (biometriaManager.estaDisponible()) {
             biometriaManager.autenticar(
@@ -58,8 +57,6 @@ class LoginViewModel @Inject constructor(
                 titulo = "Inicio de Sesión",
                 subtitulo = "Usa tu huella para entrar al inventario",
                 onSuccess = {
-                    // Si la huella es correcta, marcamos como logueado
-                    // En una app real buscaríamos al último usuario guardado
                     _uiState.update { it.copy(isLoggedIn = true) }
                 },
                 onError = { _, error ->

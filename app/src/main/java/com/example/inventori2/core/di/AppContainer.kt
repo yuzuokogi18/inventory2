@@ -36,7 +36,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AppContainer { // Cambiado a object para mejor compatibilidad con Hilt
+object AppContainer {
 
     @Provides
     @Singleton
@@ -46,7 +46,7 @@ object AppContainer { // Cambiado a object para mejor compatibilidad con Hilt
             AppDatabase::class.java,
             "inventori_db"
         )
-        .fallbackToDestructiveMigration() // Permite cambios en la DB sin crashes (borra datos viejos)
+        .fallbackToDestructiveMigration()
         .build()
     }
 

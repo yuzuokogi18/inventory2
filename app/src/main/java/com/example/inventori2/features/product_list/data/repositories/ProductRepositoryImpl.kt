@@ -7,7 +7,7 @@ import com.example.inventori2.features.product_list.domain.repositories.ProductR
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 
-// Quitamos @Inject porque ya se provee en AppContainer.kt
+
 class ProductRepositoryImpl(
     private val productDao: ProductDao,
     private val tokenDataStore: TokenDataStore

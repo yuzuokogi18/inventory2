@@ -15,7 +15,6 @@ fun RegisterScreen(
     onRegisterSuccess: () -> Unit = {},
     viewModel: RegisterViewModel = hiltViewModel()
 ) {
-    // Corregido: RegisterUIState -> RegisterUiState y simplificado collectAsStateWithLifecycle
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val nombre by viewModel.nombre.collectAsStateWithLifecycle()
     val email by viewModel.email.collectAsStateWithLifecycle()

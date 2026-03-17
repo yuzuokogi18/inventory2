@@ -29,5 +29,5 @@ data class ProductActionDTO(
     val usuarioId: Int,
 
     @SerializedName("created_at")
-    val createdAt: String? // Ahora es nullable para que no rompa si el backend no lo envía
+    val createdAt: String?
 )

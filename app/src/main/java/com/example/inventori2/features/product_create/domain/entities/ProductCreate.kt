@@ -10,7 +10,7 @@ data class ProductCreate(
     val categoriaId: Int?,
     val usuarioId: Int,
     val createdAt: String?,
-    val imagenUri: String? = null // Nuevo campo para la imagen
+    val imagenUri: String? = null
 ) {
     companion object {
         fun new(

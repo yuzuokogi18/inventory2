@@ -5,7 +5,7 @@ import com.example.inventori2.features.product_delete.domain.entities.ProductDel
 
 fun ProductDeleteResponse.toDomain(): ProductDeleteResult {
     return ProductDeleteResult(
-        success = true, // Si llegamos aquí sin excepción, es éxito
+        success = true,
         message = this.message
     )
 }

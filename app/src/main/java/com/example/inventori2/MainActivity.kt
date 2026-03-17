@@ -16,7 +16,7 @@ class MainActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MaterialTheme { // Wrapper de tema para evitar crashes de componentes
+            MaterialTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
                     val navController = rememberNavController()
                     AppNavGraph(navController = navController)

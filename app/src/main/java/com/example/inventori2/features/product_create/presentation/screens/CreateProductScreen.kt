@@ -61,8 +61,7 @@ fun CreateProductScreen(
             onFechaVencimientoChange = viewModel::onFechaVencimientoChange,
             categoriaId = categoriaId,
             onCategoriaSelected = viewModel::onCategoriaChange,
-            
-            // --- PARÁMETROS DE HARDWARE ---
+
             imageUri = imageUri,
             onImageSelected = viewModel::onImageSelected,
             getCameraUri = { viewModel.getCameraUri() },

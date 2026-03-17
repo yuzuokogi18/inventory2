@@ -18,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProductDeleteViewModel @Inject constructor(
     private val deleteProductUseCase: DeleteProductUseCase,
-    @ApplicationContext private val context: Context // Hardware: Inyectamos contexto para vibración
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(false)
@@ -50,7 +50,6 @@ class ProductDeleteViewModel @Inject constructor(
         }
     }
 
-    // Lógica de Hardware: Vibración
     private fun vibratePhone() {
         val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val vibratorManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager

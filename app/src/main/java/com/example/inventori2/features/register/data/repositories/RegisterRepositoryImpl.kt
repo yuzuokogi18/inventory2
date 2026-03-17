@@ -6,7 +6,7 @@ import com.example.inventori2.features.register.data.datasources.models.Register
 import com.example.inventori2.features.register.domain.entities.User
 import com.example.inventori2.features.register.domain.repositories.RegisterRepository
 
-// Quitamos @Inject porque ya se provee en AppContainer.kt
+
 class RegisterRepositoryImpl(
     private val userDao: UserDao
 ) : RegisterRepository {

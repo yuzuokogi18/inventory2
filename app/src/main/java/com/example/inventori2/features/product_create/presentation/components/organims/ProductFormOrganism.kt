@@ -73,12 +73,11 @@ fun ProductFormOrganism(
         modifier = modifier
             .fillMaxSize()
             .padding(horizontal = 20.dp)
-            .verticalScroll(rememberScrollState()), // Habilitar scroll para evitar que se corten los botones
-        verticalArrangement = Arrangement.spacedBy(16.dp) // Espaciado uniforme entre elementos
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Spacer(modifier = Modifier.height(8.dp))
 
-        // --- SECCIÓN DE IMAGEN MEJORADA ---
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -116,7 +115,6 @@ fun ProductFormOrganism(
             }
         }
 
-        // --- CAMPOS DE TEXTO ---
         FormFieldMolecule(
             label = "Nombre del producto",
             value = nombre,
@@ -141,7 +139,6 @@ fun ProductFormOrganism(
             enabled = !isLoading
         )
 
-        // --- DROPDOWN CATEGORÍA ---
         Column {
             Text("Categoría", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Spacer(modifier = Modifier.height(8.dp))
@@ -177,7 +174,6 @@ fun ProductFormOrganism(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // --- BOTONES DE ACCIÓN ---
         ActionButtonsMolecule(
             onCancel = onCancel,
             onSave = onSave,

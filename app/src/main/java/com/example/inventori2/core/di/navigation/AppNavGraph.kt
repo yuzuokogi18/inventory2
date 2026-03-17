@@ -24,7 +24,7 @@ fun AppNavGraph(
         navController = navController,
         startDestination = AppRoutes.Login.route
     ) {
-        // 🔥 LOGIN
+
         composable(AppRoutes.Login.route) {
             LoginScreen(
                 onNavigateToRegister = { navController.navigate(AppRoutes.Register.route) },
@@ -36,7 +36,6 @@ fun AppNavGraph(
             )
         }
 
-        // 🔥 REGISTER
         composable(AppRoutes.Register.route) {
             RegisterScreen(
                 onNavigateToLogin = { navController.popBackStack() },
@@ -48,7 +47,6 @@ fun AppNavGraph(
             )
         }
 
-        // 🔥 DASHBOARD (FEATURE 1)
         composable(AppRoutes.Dashboard.route) {
             DashboardScreen(
                 onNavigateToList = { navController.navigate(AppRoutes.ProductList.route) },
@@ -56,7 +54,6 @@ fun AppNavGraph(
             )
         }
 
-        // 🔥 PROFILE (FEATURE 2)
         composable(AppRoutes.Profile.route) {
             ProfileScreen(
                 onLogout = {
@@ -68,7 +65,6 @@ fun AppNavGraph(
             )
         }
 
-        // 🔥 PRODUCT LIST
         composable(AppRoutes.ProductList.route) {
             ProductsScreen(
                 onCreateProductClick = { navController.navigate(AppRoutes.CreateProduct.route) },
@@ -77,7 +73,6 @@ fun AppNavGraph(
             )
         }
 
-        // ... resto de rutas (Create, Detail, Edit) se mantienen igual
         composable(AppRoutes.CreateProduct.route) {
             CreateProductScreen(onBackClick = { navController.popBackStack() }, onSuccess = { navController.popBackStack() })
         }

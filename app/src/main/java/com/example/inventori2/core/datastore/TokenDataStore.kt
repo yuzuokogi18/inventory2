@@ -21,7 +21,6 @@ class TokenDataStore(private val context: Context) {
         private val USER_EMAIL_KEY = stringPreferencesKey("user_email")
     }
 
-    // ================= TOKEN =================
 
     suspend fun saveToken(token: String) {
         context.dataStore.edit { prefs ->
@@ -34,8 +33,6 @@ class TokenDataStore(private val context: Context) {
             prefs[TOKEN_KEY]
         }
     }
-
-    // ================= USER =================
 
     suspend fun saveUser(user: User) {
         context.dataStore.edit { prefs ->
@@ -63,7 +60,6 @@ class TokenDataStore(private val context: Context) {
         }
     }
 
-    // ================= CLEAR =================
 
     suspend fun clearToken() {
         context.dataStore.edit { prefs ->

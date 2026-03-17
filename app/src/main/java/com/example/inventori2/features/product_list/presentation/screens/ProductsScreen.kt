@@ -35,8 +35,8 @@ fun ProductsScreen(
     onViewClick: (Int) -> Unit = {},
     onCreateProductClick: () -> Unit = {},
     modifier: Modifier = Modifier,
-    viewModel: ProductViewModel = hiltViewModel(), // Inyectado por Hilt
-    deleteViewModel: ProductDeleteViewModel = hiltViewModel() // Inyectado por Hilt
+    viewModel: ProductViewModel = hiltViewModel(),
+    deleteViewModel: ProductDeleteViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val deleteError by deleteViewModel.error.collectAsStateWithLifecycle()
