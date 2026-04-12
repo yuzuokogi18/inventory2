@@ -1,34 +1,31 @@
 package com.example.inventori2.features.product_list.presentation.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.inventori2.features.product_delete.presentation.screens.ProductDeleteScreen
 import com.example.inventori2.features.product_delete.presentation.viewmodels.ProductDeleteViewModel
-import com.example.inventori2.features.product_list.presentation.components.organims.ProductsTopBar
 import com.example.inventori2.features.product_list.presentation.viewmodels.ProductViewModel
 import com.example.inventori2.features.product_list.presentation.components.organims.ProductCard
+import com.example.inventori2.ui.theme.*
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductsScreen(
     onEditClick: (Int) -> Unit = {},
@@ -42,6 +39,9 @@ fun ProductsScreen(
     val deleteError by deleteViewModel.error.collectAsStateWithLifecycle()
 
     val snackbarHostState = remember { SnackbarHostState() }
+    var searchQuery by remember { mutableStateOf("") }
+    val categories = listOf("Todos", "Lácteos", "Frutas", "Verduras")
+    var selectedCategory by remember { mutableStateOf("Todos") }
 
     var showDeleteScreen by remember { mutableStateOf(false) }
     var selectedProductId by remember { mutableIntStateOf(-1) }
@@ -49,13 +49,6 @@ fun ProductsScreen(
 
     LaunchedEffect(Unit) {
         viewModel.getProducts()
-    }
-
-    LaunchedEffect(deleteError) {
-        deleteError?.let {
-            snackbarHostState.showSnackbar(it)
-            deleteViewModel.clearError()
-        }
     }
 
     ProductDeleteScreen(
@@ -71,54 +64,132 @@ fun ProductsScreen(
     )
 
     Scaffold(
-        topBar = { ProductsTopBar(title = "Mis productos") },
+        topBar = {
+            TopAppBar(
+                title = { Text("Inventario", fontWeight = FontWeight.Bold) },
+                actions = {
+                    IconButton(onClick = { }) { Icon(Icons.Default.Search, contentDescription = null) }
+                    IconButton(onClick = { }) { Icon(Icons.Default.FilterList, contentDescription = null) }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = BackgroundColor)
+            )
+        },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = onCreateProductClick,
-                containerColor = Color(0xFF6366F1)
+                containerColor = PrimaryGreen,
+                shape = CircleShape
             ) {
                 Icon(Icons.Filled.Add, contentDescription = null, tint = Color.White)
             }
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { paddingValues ->
-        Box(
+        Column(
             modifier = modifier
                 .fillMaxSize()
-                .background(Color(0xFFF5F5F5))
+                .background(BackgroundColor)
                 .padding(paddingValues)
         ) {
-            when {
-                uiState.isLoading -> {
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                }
-                uiState.products.isEmpty() -> {
-                    Text(
-                        text = "No hay productos disponibles",
-                        modifier = Modifier.align(Alignment.Center),
-                        color = Color.Gray
+            // Buscador
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 8.dp),
+                placeholder = { Text("Buscar productos...") },
+                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = TextSecondary) },
+                shape = RoundedCornerShape(16.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    unfocusedContainerColor = SurfaceColor,
+                    focusedContainerColor = SurfaceColor,
+                    unfocusedBorderColor = Color.Transparent,
+                    focusedBorderColor = PrimaryGreen.copy(alpha = 0.5f)
+                )
+            )
+
+            // Categorías
+            LazyRow(
+                contentPadding = PaddingValues(horizontal = 20.dp, vertical = 12.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(categories) { category ->
+                    FilterChip(
+                        selected = selectedCategory == category,
+                        onClick = { selectedCategory = category },
+                        label = { Text(category) },
+                        shape = RoundedCornerShape(20.dp),
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = PrimaryGreen,
+                            selectedLabelColor = Color.White,
+                            containerColor = SurfaceColor,
+                            labelColor = TextSecondary
+                        )
                     )
                 }
-                else -> {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize().padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        items(uiState.products) { product ->
-                            ProductCard(
-                                title = product.nombre,
-                                cantidad = product.cantidad,
-                                fechaVencimiento = product.fechaVencimiento,
-                                onEditClick = { onEditClick(product.id) },
-                                onViewClick = { onViewClick(product.id) },
-                                onDeleteClick = {
-                                    selectedProductId = product.id
-                                    selectedProductName = product.nombre
-                                    showDeleteScreen = true
-                                }
-                            )
-                        }
+            }
+
+            // Resumen Cantidad
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 8.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = PrimaryGreen.copy(alpha = 0.1f))
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(Icons.Default.Inventory2, contentDescription = null, tint = PrimaryGreen)
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Column {
+                        Text("TOTAL PRODUCTOS", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = PrimaryGreen)
+                        Text("${uiState.products.size} Items", fontWeight = FontWeight.Bold, fontSize = 18.sp)
                     }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+            
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text("TU DESPENSA", style = MaterialTheme.typography.labelMedium, color = TextSecondary)
+                TextButton(onClick = { }) {
+                    Text("Ordenar por", fontSize = 12.sp, color = PrimaryGreen)
+                    Icon(Icons.Default.KeyboardArrowDown, contentDescription = null, tint = PrimaryGreen)
+                }
+            }
+
+            if (uiState.isLoading) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(color = PrimaryGreen)
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(horizontal = 20.dp, vertical = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(uiState.products) { product ->
+                        ProductCard(
+                            title = product.nombre,
+                            cantidad = product.cantidad,
+                            fechaVencimiento = product.fechaVencimiento,
+                            onEditClick = { onEditClick(product.id) },
+                            onViewClick = { onViewClick(product.id) },
+                            onDeleteClick = {
+                                selectedProductId = product.id
+                                selectedProductName = product.nombre
+                                showDeleteScreen = true
+                            }
+                        )
+                    }
+                    item { Spacer(modifier = Modifier.height(80.dp)) }
                 }
             }
         }

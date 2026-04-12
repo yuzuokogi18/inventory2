@@ -1,12 +1,14 @@
 package com.example.inventori2.core.di.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.runtime.getValue
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
+import com.example.inventori2.core.ui.components.MainScaffold
 import com.example.inventori2.features.login.presentation.screens.LoginScreen
 import com.example.inventori2.features.register.presentation.screens.RegisterScreen
 import com.example.inventori2.features.product_create.presentation.screens.CreateProductScreen
@@ -20,77 +22,94 @@ import com.example.inventori2.features.profile.presentation.screens.ProfileScree
 fun AppNavGraph(
     navController: NavHostController
 ) {
-    NavHost(
-        navController = navController,
-        startDestination = AppRoutes.Login.route
-    ) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
-        composable(AppRoutes.Login.route) {
-            LoginScreen(
-                onNavigateToRegister = { navController.navigate(AppRoutes.Register.route) },
-                onLoginSuccess = {
-                    navController.navigate(AppRoutes.Dashboard.route) {
-                        popUpTo(AppRoutes.Login.route) { inclusive = true }
+    MainScaffold(
+        currentRoute = currentRoute,
+        onNavigate = { route ->
+            navController.navigate(route) {
+                popUpTo(AppRoutes.Dashboard.route) { saveState = true }
+                launchSingleTop = true
+                restoreState = true
+            }
+        }
+    ) { paddingValues ->
+        NavHost(
+            navController = navController,
+            startDestination = AppRoutes.Login.route
+        ) {
+            composable(AppRoutes.Login.route) {
+                LoginScreen(
+                    onNavigateToRegister = { navController.navigate(AppRoutes.Register.route) },
+                    onLoginSuccess = {
+                        navController.navigate(AppRoutes.Dashboard.route) {
+                            popUpTo(AppRoutes.Login.route) { inclusive = true }
+                        }
                     }
-                }
-            )
-        }
+                )
+            }
 
-        composable(AppRoutes.Register.route) {
-            RegisterScreen(
-                onNavigateToLogin = { navController.popBackStack() },
-                onRegisterSuccess = {
-                    navController.navigate(AppRoutes.Login.route) {
-                        popUpTo(AppRoutes.Register.route) { inclusive = true }
+            composable(AppRoutes.Register.route) {
+                RegisterScreen(
+                    onNavigateToLogin = { navController.popBackStack() },
+                    onRegisterSuccess = {
+                        navController.navigate(AppRoutes.Login.route) {
+                            popUpTo(AppRoutes.Register.route) { inclusive = true }
+                        }
                     }
-                }
-            )
-        }
+                )
+            }
 
-        composable(AppRoutes.Dashboard.route) {
-            DashboardScreen(
-                onNavigateToList = { navController.navigate(AppRoutes.ProductList.route) },
-                onNavigateToProfile = { navController.navigate(AppRoutes.Profile.route) } // Vinculado
-            )
-        }
+            composable(AppRoutes.Dashboard.route) {
+                DashboardScreen(
+                    onNavigateToList = { navController.navigate(AppRoutes.ProductList.route) },
+                    onNavigateToProfile = { navController.navigate(AppRoutes.Profile.route) }
+                )
+            }
 
-        composable(AppRoutes.Profile.route) {
-            ProfileScreen(
-                onLogout = {
-                    navController.navigate(AppRoutes.Login.route) {
-                        popUpTo(0) { inclusive = true }
-                    }
-                },
-                onBack = { navController.popBackStack() }
-            )
-        }
+            composable(AppRoutes.Profile.route) {
+                ProfileScreen(
+                    onLogout = {
+                        navController.navigate(AppRoutes.Login.route) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    },
+                    onBack = { navController.popBackStack() }
+                )
+            }
 
-        composable(AppRoutes.ProductList.route) {
-            ProductsScreen(
-                onCreateProductClick = { navController.navigate(AppRoutes.CreateProduct.route) },
-                onEditClick = { id -> navController.navigate(AppRoutes.EditProduct.createRoute(id)) },
-                onViewClick = { id -> navController.navigate(AppRoutes.ProductDetail.createRoute(id)) }
-            )
-        }
+            composable(AppRoutes.ProductList.route) {
+                ProductsScreen(
+                    onCreateProductClick = { navController.navigate(AppRoutes.CreateProduct.route) },
+                    onEditClick = { id -> navController.navigate(AppRoutes.EditProduct.createRoute(id)) },
+                    onViewClick = { id -> navController.navigate(AppRoutes.ProductDetail.createRoute(id)) }
+                )
+            }
 
-        composable(AppRoutes.CreateProduct.route) {
-            CreateProductScreen(onBackClick = { navController.popBackStack() }, onSuccess = { navController.popBackStack() })
-        }
+            composable(AppRoutes.CreateProduct.route) {
+                CreateProductScreen(onBackClick = { navController.popBackStack() }, onSuccess = { navController.popBackStack() })
+            }
 
-        composable(
-            route = AppRoutes.ProductDetail.route,
-            arguments = listOf(navArgument("productId") { type = NavType.IntType })
-        ) { backStackEntry ->
-            val productId = backStackEntry.arguments?.getInt("productId") ?: 0
-            ProductDetailScreen(productId = productId, onBackClick = { navController.popBackStack() })
-        }
+            composable(
+                route = AppRoutes.ProductDetail.route,
+                arguments = listOf(navArgument("productId") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val productId = backStackEntry.arguments?.getInt("productId") ?: 0
+                ProductDetailScreen(productId = productId, onBackClick = { navController.popBackStack() })
+            }
 
-        composable(
-            route = AppRoutes.EditProduct.route,
-            arguments = listOf(navArgument("productId") { type = NavType.IntType })
-        ) { backStackEntry ->
-            val productId = backStackEntry.arguments?.getInt("productId") ?: 0
-            ProductEditScreen(productId = productId, onBackClick = { navController.popBackStack() }, onSuccess = { navController.popBackStack() })
+            composable(
+                route = AppRoutes.EditProduct.route,
+                arguments = listOf(navArgument("productId") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val productId = backStackEntry.arguments?.getInt("productId") ?: 0
+                ProductEditScreen(productId = productId, onBackClick = { navController.popBackStack() }, onSuccess = { navController.popBackStack() })
+            }
+            
+            // Mock screens for new routes
+            composable(AppRoutes.Alerts.route) { /* TODO: AlertsScreen */ }
+            composable(AppRoutes.ShoppingList.route) { /* TODO: ShoppingListScreen */ }
         }
     }
 }

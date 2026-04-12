@@ -9,7 +9,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.inventori2.core.ui.components.MainScaffold
 import com.example.inventori2.features.login.presentation.components.organims.LoginContent
-import com.example.inventori2.features.login.presentation.components.organisms.LoginHeader
 import com.example.inventori2.features.login.presentation.viewmodels.LoginViewModel
 
 @Composable
@@ -32,7 +31,6 @@ fun LoginScreen(
     }
 
     MainScaffold {
-        LoginHeader()
         LoginContent(
             email = email,
             onEmailChange = viewModel::onEmailChange,
