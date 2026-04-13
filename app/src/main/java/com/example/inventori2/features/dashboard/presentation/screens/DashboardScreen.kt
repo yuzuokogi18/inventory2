@@ -8,13 +8,15 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.TrendingDown
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -25,7 +27,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.inventori2.features.dashboard.presentation.viewmodels.DashboardViewModel
-import com.example.inventori2.ui.theme.*
+
+data class RecentAlert(val title: String, val subtitle: String, val icon: ImageVector, val color: Color)
 
 @Composable
 fun DashboardScreen(
@@ -34,15 +37,24 @@ fun DashboardScreen(
     viewModel: DashboardViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val colorScheme = MaterialTheme.colorScheme
+    
+    val recentAlerts = remember {
+        listOf(
+            RecentAlert("Leche Entera 1L", "Caduca mañana", Icons.Default.ErrorOutline, Color(0xFFE74C3C)),
+            RecentAlert("Huevos Docena", "Solo quedan 3 unidades", Icons.Default.WarningAmber, Color(0xFFF39C12)),
+            RecentAlert("Yogurt Griego", "Caducó hace 2 días", Icons.Default.History, Color(0xFFE74C3C))
+        )
+    }
 
-    Scaffold(
-        bottomBar = { /* Aquí irá el Bottom Navigation más adelante */ }
-    ) { paddingValues ->
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(colorScheme.background)
+    ) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .background(BackgroundColor)
-                .padding(paddingValues)
                 .padding(horizontal = 20.dp)
         ) {
             item {
@@ -54,7 +66,7 @@ fun DashboardScreen(
                 Text(
                     text = "ESTADO GENERAL",
                     style = MaterialTheme.typography.labelMedium,
-                    color = TextSecondary,
+                    color = colorScheme.onSurfaceVariant,
                     letterSpacing = 1.sp
                 )
                 Spacer(modifier = Modifier.height(12.dp))
@@ -69,21 +81,21 @@ fun DashboardScreen(
                         title = "TOTAL",
                         value = uiState.totalProducts.toString(),
                         icon = Icons.Default.Inventory2,
-                        color = PrimaryGreen,
+                        color = colorScheme.primary,
                         modifier = Modifier.weight(1f)
                     )
                     StatCardSmall(
                         title = "POR CADUCAR",
-                        value = "5", // Hardcoded for UI demo
+                        value = "5",
                         icon = Icons.Default.Timer,
-                        color = AlertRed,
+                        color = colorScheme.error,
                         modifier = Modifier.weight(1f)
                     )
                     StatCardSmall(
                         title = "STOCK BAJO",
                         value = uiState.lowStockProducts.toString(),
-                        icon = Icons.Default.TrendingDown,
-                        color = WarningOrange,
+                        icon = Icons.AutoMirrored.Filled.TrendingDown,
+                        color = Color(0xFFF39C12),
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -99,16 +111,16 @@ fun DashboardScreen(
                     Text(
                         text = "Alertas Recientes",
                         style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = colorScheme.onSurface
                     )
                     TextButton(onClick = { /* Navigate to Alerts */ }) {
-                        Text("Ver todas", color = PrimaryGreen)
+                        Text("Ver todas", color = colorScheme.primary)
                     }
                 }
                 Spacer(modifier = Modifier.height(8.dp))
             }
 
-            // Simulación de alertas del diseño
             items(recentAlerts) { alert ->
                 AlertItem(alert)
                 Spacer(modifier = Modifier.height(12.dp))
@@ -125,6 +137,7 @@ fun DashboardScreen(
 
 @Composable
 fun HeaderSection(userName: String, onProfileClick: () -> Unit) {
+    val colorScheme = MaterialTheme.colorScheme
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -135,31 +148,32 @@ fun HeaderSection(userName: String, onProfileClick: () -> Unit) {
                 text = "Hola, $userName 👋",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
-                color = TextPrimary
+                color = colorScheme.onSurface
             )
             Text(
                 text = "Tu despensa está al 85% de capacidad",
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextSecondary
+                color = colorScheme.onSurfaceVariant
             )
         }
         IconButton(
             onClick = onProfileClick,
             modifier = Modifier
                 .size(45.dp)
-                .background(Color.White, CircleShape)
+                .background(colorScheme.surface, CircleShape)
         ) {
-            Icon(Icons.Default.Person, contentDescription = "Perfil", tint = TextSecondary)
+            Icon(Icons.Default.Person, contentDescription = "Perfil", tint = colorScheme.onSurfaceVariant)
         }
     }
 }
 
 @Composable
 fun CapacityCard(capacityValue: Float) {
+    val colorScheme = MaterialTheme.colorScheme
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(containerColor = SurfaceColor),
+        colors = CardDefaults.cardColors(containerColor = colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
@@ -169,16 +183,18 @@ fun CapacityCard(capacityValue: Float) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(contentAlignment = Alignment.Center, modifier = Modifier.size(80.dp)) {
+                val outlineColor = colorScheme.outlineVariant
+                val primaryColor = colorScheme.primary
                 Canvas(modifier = Modifier.size(80.dp)) {
                     drawArc(
-                        color = BorderColor,
+                        color = outlineColor,
                         startAngle = 0f,
                         sweepAngle = 360f,
                         useCenter = false,
                         style = Stroke(width = 8.dp.toPx(), cap = StrokeCap.Round)
                     )
                     drawArc(
-                        color = PrimaryGreen,
+                        color = primaryColor,
                         startAngle = -90f,
                         sweepAngle = 360f * capacityValue,
                         useCenter = false,
@@ -188,16 +204,21 @@ fun CapacityCard(capacityValue: Float) {
                 Text(
                     text = "${(capacityValue * 100).toInt()}%",
                     fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp
+                    fontSize = 18.sp,
+                    color = colorScheme.onSurface
                 )
             }
             Spacer(modifier = Modifier.width(20.dp))
             Column {
-                Text(text = "Estado Óptimo", fontWeight = FontWeight.Bold, color = PrimaryGreen)
+                Text(
+                    text = "Estado Óptimo",
+                    fontWeight = FontWeight.Bold,
+                    color = colorScheme.primary
+                )
                 Text(
                     text = "Tienes suficiente espacio para más productos.",
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextSecondary
+                    color = colorScheme.onSurfaceVariant
                 )
             }
         }
@@ -206,10 +227,11 @@ fun CapacityCard(capacityValue: Float) {
 
 @Composable
 fun StatCardSmall(title: String, value: String, icon: ImageVector, color: Color, modifier: Modifier) {
+    val colorScheme = MaterialTheme.colorScheme
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = SurfaceColor),
+        colors = CardDefaults.cardColors(containerColor = colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
         Column(
@@ -218,18 +240,29 @@ fun StatCardSmall(title: String, value: String, icon: ImageVector, color: Color,
         ) {
             Icon(icon, contentDescription = null, tint = color, modifier = Modifier.size(24.dp))
             Spacer(modifier = Modifier.height(12.dp))
-            Text(text = value, fontSize = 22.sp, fontWeight = FontWeight.Bold)
-            Text(text = title, fontSize = 10.sp, color = TextSecondary, fontWeight = FontWeight.SemiBold)
+            Text(
+                text = value,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                color = colorScheme.onSurface
+            )
+            Text(
+                text = title,
+                fontSize = 10.sp,
+                color = colorScheme.onSurfaceVariant,
+                fontWeight = FontWeight.SemiBold
+            )
         }
     }
 }
 
 @Composable
 fun AlertItem(alert: RecentAlert) {
+    val colorScheme = MaterialTheme.colorScheme
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = SurfaceColor)
+        colors = CardDefaults.cardColors(containerColor = colorScheme.surface)
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
@@ -245,41 +278,54 @@ fun AlertItem(alert: RecentAlert) {
             }
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
-                Text(text = alert.title, fontWeight = FontWeight.Bold)
-                Text(text = alert.subtitle, fontSize = 12.sp, color = TextSecondary)
+                Text(
+                    text = alert.title,
+                    fontWeight = FontWeight.Bold,
+                    color = colorScheme.onSurface
+                )
+                Text(
+                    text = alert.subtitle,
+                    fontSize = 12.sp,
+                    color = colorScheme.onSurfaceVariant
+                )
             }
-            Icon(Icons.Default.ChevronRight, contentDescription = null, tint = BorderColor)
+            Icon(Icons.Default.ChevronRight, contentDescription = null, tint = colorScheme.outline)
         }
     }
 }
 
 @Composable
 fun SupermarketCard() {
+    val colorScheme = MaterialTheme.colorScheme
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E9))
+        colors = CardDefaults.cardColors(
+            containerColor = colorScheme.primaryContainer
+        )
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            val onPrimaryContainer = colorScheme.onPrimaryContainer
             Column(modifier = Modifier.weight(1f)) {
-                Text("Supermercado", color = PrimaryGreen, fontWeight = FontWeight.Bold)
+                Text(
+                    "Supermercado",
+                    color = onPrimaryContainer,
+                    fontWeight = FontWeight.Bold
+                )
                 Text(
                     "Ahorra hasta un 15% en productos de temporada.",
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextSecondary
+                    color = onPrimaryContainer.copy(alpha = 0.8f)
                 )
             }
-            Icon(Icons.Default.ArrowForward, contentDescription = null, tint = PrimaryGreen)
+            Icon(
+                Icons.AutoMirrored.Filled.ArrowForward,
+                contentDescription = null,
+                tint = onPrimaryContainer
+            )
         }
     }
 }
-
-data class RecentAlert(val title: String, val subtitle: String, val icon: ImageVector, val color: Color)
-val recentAlerts = listOf(
-    RecentAlert("Leche Entera 1L", "Caduca mañana", Icons.Default.ErrorOutline, AlertRed),
-    RecentAlert("Huevos Docena", "Solo quedan 3 unidades", Icons.Default.WarningAmber, WarningOrange),
-    RecentAlert("Yogurt Griego", "Caducó hace 2 días", Icons.Default.History, AlertRed)
-)

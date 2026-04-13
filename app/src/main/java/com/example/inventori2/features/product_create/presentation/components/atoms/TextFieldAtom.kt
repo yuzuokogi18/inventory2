@@ -1,11 +1,8 @@
 package com.example.inventori2.features.product_create.presentation.components.atoms
 
-
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,12 +26,16 @@ fun TextFieldAtom(
         singleLine = singleLine,
         maxLines = maxLines,
         enabled = enabled,
-        shape = RoundedCornerShape(8.dp),
-        colors = TextFieldDefaults.colors(
-            unfocusedContainerColor = Color(0xFFF5F5F5),
-            focusedContainerColor = Color(0xFFF5F5F5),
-            unfocusedIndicatorColor = Color.Transparent,
-            focusedIndicatorColor = Color(0xFF6366F1)
+        shape = RoundedCornerShape(12.dp),
+        colors = OutlinedTextFieldDefaults.colors(
+            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+            focusedContainerColor = MaterialTheme.colorScheme.surface,
+            unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+            unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant
         )
     )
 }

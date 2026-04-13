@@ -71,13 +71,16 @@ fun ProductsScreen(
                     IconButton(onClick = { }) { Icon(Icons.Default.Search, contentDescription = null) }
                     IconButton(onClick = { }) { Icon(Icons.Default.FilterList, contentDescription = null) }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = BackgroundColor)
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground
+                )
             )
         },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = onCreateProductClick,
-                containerColor = PrimaryGreen,
+                containerColor = MaterialTheme.colorScheme.primary,
                 shape = CircleShape
             ) {
                 Icon(Icons.Filled.Add, contentDescription = null, tint = Color.White)
@@ -88,7 +91,7 @@ fun ProductsScreen(
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .background(BackgroundColor)
+                .background(MaterialTheme.colorScheme.background)
                 .padding(paddingValues)
         ) {
             // Buscador
@@ -99,13 +102,15 @@ fun ProductsScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp, vertical = 8.dp),
                 placeholder = { Text("Buscar productos...") },
-                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = TextSecondary) },
+                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant) },
                 shape = RoundedCornerShape(16.dp),
                 colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedContainerColor = SurfaceColor,
-                    focusedContainerColor = SurfaceColor,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
                     unfocusedBorderColor = Color.Transparent,
-                    focusedBorderColor = PrimaryGreen.copy(alpha = 0.5f)
+                    focusedBorderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface
                 )
             )
 
@@ -115,16 +120,17 @@ fun ProductsScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(categories) { category ->
+                    val isSelected = selectedCategory == category
                     FilterChip(
-                        selected = selectedCategory == category,
+                        selected = isSelected,
                         onClick = { selectedCategory = category },
                         label = { Text(category) },
                         shape = RoundedCornerShape(20.dp),
                         colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = PrimaryGreen,
-                            selectedLabelColor = Color.White,
-                            containerColor = SurfaceColor,
-                            labelColor = TextSecondary
+                            selectedContainerColor = MaterialTheme.colorScheme.primary,
+                            selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
+                            containerColor = MaterialTheme.colorScheme.surface,
+                            labelColor = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     )
                 }
@@ -136,17 +142,33 @@ fun ProductsScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp, vertical = 8.dp),
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = PrimaryGreen.copy(alpha = 0.1f))
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.7f)
+                )
             ) {
                 Row(
                     modifier = Modifier.padding(16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(Icons.Default.Inventory2, contentDescription = null, tint = PrimaryGreen)
+                    Icon(
+                        Icons.Default.Inventory2, 
+                        contentDescription = null, 
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
                     Spacer(modifier = Modifier.width(12.dp))
                     Column {
-                        Text("TOTAL PRODUCTOS", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = PrimaryGreen)
-                        Text("${uiState.products.size} Items", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                        Text(
+                            "TOTAL PRODUCTOS", 
+                            fontSize = 10.sp, 
+                            fontWeight = FontWeight.Bold, 
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                        Text(
+                            "${uiState.products.size} Items", 
+                            fontWeight = FontWeight.Bold, 
+                            fontSize = 18.sp,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
                     }
                 }
             }
@@ -158,16 +180,20 @@ fun ProductsScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("TU DESPENSA", style = MaterialTheme.typography.labelMedium, color = TextSecondary)
+                Text(
+                    "TU DESPENSA", 
+                    style = MaterialTheme.typography.labelMedium, 
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
                 TextButton(onClick = { }) {
-                    Text("Ordenar por", fontSize = 12.sp, color = PrimaryGreen)
-                    Icon(Icons.Default.KeyboardArrowDown, contentDescription = null, tint = PrimaryGreen)
+                    Text("Ordenar por", fontSize = 12.sp, color = MaterialTheme.colorScheme.primary)
+                    Icon(Icons.Default.KeyboardArrowDown, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                 }
             }
 
             if (uiState.isLoading) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = PrimaryGreen)
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                 }
             } else {
                 LazyColumn(

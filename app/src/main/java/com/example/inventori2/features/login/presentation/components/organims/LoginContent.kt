@@ -17,7 +17,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.inventori2.ui.theme.*
 import com.example.inventori2.features.register.presentation.components.molecules.PasswordInputField
 import com.example.inventori2.features.register.presentation.components.molecules.InputField
 
@@ -38,6 +37,7 @@ fun LoginContent(
     onClearError: () -> Unit = {}
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
+    val colorScheme = MaterialTheme.colorScheme
 
     LaunchedEffect(error) {
         error?.let {
@@ -46,7 +46,7 @@ fun LoginContent(
         }
     }
 
-    Box(modifier = modifier.fillMaxSize().background(BackgroundColor)) {
+    Box(modifier = modifier.fillMaxSize().background(colorScheme.background)) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -56,7 +56,7 @@ fun LoginContent(
         ) {
             Spacer(modifier = Modifier.height(60.dp))
             
-            // Logo del Escudo (Ya actualizado en AppLogo)
+            // Logo del Escudo
             com.example.inventori2.features.login.presentation.components.atoms.AppLogo(size = 90)
             
             Spacer(modifier = Modifier.height(48.dp))
@@ -65,7 +65,7 @@ fun LoginContent(
                 Text(
                     text = "Correo Electrónico",
                     style = MaterialTheme.typography.labelLarge,
-                    color = TextPrimary,
+                    color = colorScheme.onBackground,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(8.dp))
@@ -84,7 +84,7 @@ fun LoginContent(
                 Text(
                     text = "Contraseña",
                     style = MaterialTheme.typography.labelLarge,
-                    color = TextPrimary,
+                    color = colorScheme.onBackground,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(8.dp))
@@ -111,10 +111,10 @@ fun LoginContent(
                     modifier = Modifier
                         .weight(1f)
                         .height(56.dp)
-                        .border(1.dp, PrimaryGreen, RoundedCornerShape(28.dp)),
+                        .border(1.dp, colorScheme.primary, RoundedCornerShape(28.dp)),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Transparent,
-                        contentColor = PrimaryGreen
+                        contentColor = colorScheme.primary
                     ),
                     shape = RoundedCornerShape(28.dp),
                     enabled = !isLoading && email.isNotBlank() && password.isNotBlank()
@@ -130,13 +130,13 @@ fun LoginContent(
                     onClick = onBiometricClick,
                     modifier = Modifier
                         .size(56.dp)
-                        .background(Color.White, CircleShape)
-                        .border(1.dp, BorderColor, CircleShape)
+                        .background(colorScheme.surface, CircleShape)
+                        .border(1.dp, colorScheme.outline, CircleShape)
                 ) {
                     Icon(
                         imageVector = Icons.Default.Fingerprint,
                         contentDescription = "Login con huella",
-                        tint = PrimaryGreen,
+                        tint = colorScheme.primary,
                         modifier = Modifier.size(32.dp)
                     )
                 }
@@ -150,7 +150,7 @@ fun LoginContent(
             ) {
                 Text(
                     text = "¿No tienes cuenta? Regístrate",
-                    color = TextSecondary,
+                    color = colorScheme.onSurfaceVariant,
                     fontSize = 14.sp
                 )
             }
@@ -159,7 +159,7 @@ fun LoginContent(
         if (isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center),
-                color = PrimaryGreen
+                color = colorScheme.primary
             )
         }
 

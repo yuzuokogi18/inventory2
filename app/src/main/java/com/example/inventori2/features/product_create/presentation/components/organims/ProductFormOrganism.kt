@@ -69,9 +69,12 @@ fun ProductFormOrganism(
         if (success) onImageSelected(tempCameraUri)
     }
 
+    val colorScheme = MaterialTheme.colorScheme
+
     Column(
         modifier = modifier
             .fillMaxSize()
+            .background(colorScheme.background)
             .padding(horizontal = 20.dp)
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -83,8 +86,8 @@ fun ProductFormOrganism(
                 .fillMaxWidth()
                 .height(180.dp)
                 .clip(RoundedCornerShape(16.dp))
-                .background(Color(0xFFF8F8F8))
-                .border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(16.dp))
+                .background(colorScheme.surfaceVariant.copy(alpha = 0.5f))
+                .border(1.dp, colorScheme.outlineVariant, RoundedCornerShape(16.dp))
                 .clickable { galleryLauncher.launch("image/*") },
             contentAlignment = Alignment.Center
         ) {
@@ -95,22 +98,30 @@ fun ProductFormOrganism(
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
-                // Botón flotante para cambiar foto
                 FilledIconButton(
                     onClick = { 
                         tempCameraUri = getCameraUri()
                         tempCameraUri?.let { cameraLauncher.launch(it) }
                     },
                     modifier = Modifier.align(Alignment.BottomEnd).padding(8.dp),
-                    colors = IconButtonDefaults.filledIconButtonColors(containerColor = MaterialTheme.colorScheme.primary)
+                    colors = IconButtonDefaults.filledIconButtonColors(containerColor = colorScheme.primary)
                 ) {
                     Icon(Icons.Default.AddAPhoto, contentDescription = null, modifier = Modifier.size(20.dp))
                 }
             } else {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(Icons.Default.Image, contentDescription = null, modifier = Modifier.size(40.dp), tint = Color.LightGray)
+                    Icon(
+                        Icons.Default.Image, 
+                        contentDescription = null, 
+                        modifier = Modifier.size(40.dp), 
+                        tint = colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                    )
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text("Añadir foto del producto", color = Color.Gray, style = MaterialTheme.typography.bodyMedium)
+                    Text(
+                        "Añadir foto del producto", 
+                        color = colorScheme.onSurfaceVariant, 
+                        style = MaterialTheme.typography.bodyMedium
+                    )
                 }
             }
         }
@@ -140,7 +151,11 @@ fun ProductFormOrganism(
         )
 
         Column {
-            Text("Categoría", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(
+                "Categoría", 
+                style = MaterialTheme.typography.labelLarge, 
+                color = colorScheme.onSurface
+            )
             Spacer(modifier = Modifier.height(8.dp))
             ExposedDropdownMenuBox(
                 expanded = expanded,
@@ -153,15 +168,23 @@ fun ProductFormOrganism(
                     modifier = Modifier.menuAnchor().fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedContainerColor = Color(0xFFFBFBFB),
-                        unfocusedContainerColor = Color(0xFFFBFBFB)
+                        focusedContainerColor = colorScheme.surface,
+                        unfocusedContainerColor = colorScheme.surface,
+                        focusedBorderColor = colorScheme.primary,
+                        unfocusedBorderColor = colorScheme.outlineVariant,
+                        focusedTextColor = colorScheme.onSurface,
+                        unfocusedTextColor = colorScheme.onSurface
                     ),
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) }
                 )
-                ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                ExposedDropdownMenu(
+                    expanded = expanded, 
+                    onDismissRequest = { expanded = false },
+                    modifier = Modifier.background(colorScheme.surface)
+                ) {
                     categorias.forEach { categoria ->
                         DropdownMenuItem(
-                            text = { Text(categoria.nombre) },
+                            text = { Text(categoria.nombre, color = colorScheme.onSurface) },
                             onClick = {
                                 onCategoriaSelected(categoria.id)
                                 expanded = false

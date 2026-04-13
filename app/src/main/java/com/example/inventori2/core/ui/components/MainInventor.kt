@@ -13,9 +13,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.inventori2.core.di.navigation.AppRoutes
-import com.example.inventori2.ui.theme.PrimaryGreen
-import com.example.inventori2.ui.theme.SurfaceColor
-import com.example.inventori2.ui.theme.TextSecondary
 
 @Composable
 fun MainScaffold(
@@ -52,7 +49,7 @@ fun MainScaffold(
 @Composable
 fun BottomNavigationBar(currentRoute: String?, onNavigate: (String) -> Unit) {
     NavigationBar(
-        containerColor = SurfaceColor,
+        containerColor = MaterialTheme.colorScheme.surface,
         tonalElevation = 8.dp,
         modifier = Modifier.height(80.dp)
     ) {
@@ -79,13 +76,14 @@ fun BottomNavigationBar(currentRoute: String?, onNavigate: (String) -> Unit) {
                 label = {
                     Text(
                         text = item.title,
-                        fontSize = 10.sp,
-                        color = if (selected) PrimaryGreen else TextSecondary
+                        fontSize = 10.sp
                     )
                 },
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = PrimaryGreen,
-                    unselectedIconColor = TextSecondary,
+                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    selectedTextColor = MaterialTheme.colorScheme.primary,
+                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     indicatorColor = Color.Transparent
                 )
             )
