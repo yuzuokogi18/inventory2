@@ -5,6 +5,9 @@ sealed class AppRoutes(val route: String) {
     object Register : AppRoutes("register")
     object Dashboard : AppRoutes("dashboard")
     object Profile : AppRoutes("profile")
+    object Shopping : AppRoutes("shopping")
+    object Stats : AppRoutes("stats")
+    object Notifications : AppRoutes("notifications")
 
     object ProductList : AppRoutes("products/list")
     object CreateProduct : AppRoutes("products/create")

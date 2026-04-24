@@ -1,9 +1,15 @@
 package com.example.inventori2.features.login.presentation.screens
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -18,7 +24,7 @@ fun LoginScreen(
     onLoginSuccess: () -> Unit = {},
     viewModel: LoginViewModel = hiltViewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle(LoginUiState())
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val email by viewModel.email.collectAsStateWithLifecycle("")
     val password by viewModel.password.collectAsStateWithLifecycle("")
     val visiblePassword by viewModel.passwordVisible.collectAsStateWithLifecycle(false)
@@ -32,20 +38,24 @@ fun LoginScreen(
     }
 
     MainScaffold {
-        LoginHeader()
-        LoginContent(
-            email = email,
-            onEmailChange = viewModel::onEmailChange,
-            password = password,
-            onPasswordChange = viewModel::onPasswordChange,
-            passwordVisible = visiblePassword,
-            onChangeVisible = { viewModel.onPasswordVisibilityChange() },
-            onLoginClick = { viewModel.login(email, password) },
-            onBiometricClick = { activity?.let { viewModel.loginConBiometria(it) } },
-            onRegisterClick = onNavigateToRegister,
-            isLoading = uiState.isLoading,
-            error = uiState.error,
-            onClearError = viewModel::clearError
-        )
+        Column(modifier = Modifier.fillMaxSize()) {
+            Spacer(modifier = Modifier.height(40.dp))
+            LoginHeader(logoSize = 80)
+            LoginContent(
+                email = email,
+                onEmailChange = viewModel::onEmailChange,
+                password = password,
+                onPasswordChange = viewModel::onPasswordChange,
+                passwordVisible = visiblePassword,
+                onChangeVisible = { viewModel.onPasswordVisibilityChange() },
+                onLoginClick = { viewModel.login(email, password) },
+                onBiometricClick = { activity?.let { viewModel.loginConBiometria(it) } },
+                onRegisterClick = onNavigateToRegister,
+                isLoading = uiState.isLoading,
+                error = uiState.error,
+                onClearError = viewModel::clearError,
+                modifier = Modifier.weight(1f)
+            )
+        }
     }
 }

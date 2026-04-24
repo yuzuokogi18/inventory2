@@ -21,7 +21,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.inventori2.core.ui.components.MainScaffold
-import com.example.inventori2.features.product_create.presentation.components.organims.TopBarOrganism
+import com.example.inventori2.features.inventory.product_create.presentation.components.organims.TopBarOrganism
+
 import com.example.inventori2.features.profile.presentation.viewmodels.ProfileViewModel
 
 @Composable

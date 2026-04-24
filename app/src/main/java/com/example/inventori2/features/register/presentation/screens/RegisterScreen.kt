@@ -19,6 +19,10 @@ fun RegisterScreen(
     val nombre by viewModel.nombre.collectAsStateWithLifecycle()
     val email by viewModel.email.collectAsStateWithLifecycle()
     val password by viewModel.password.collectAsStateWithLifecycle()
+    
+    // Estados añadidos para el ojo y el switch
+    val passwordVisible by viewModel.passwordVisible.collectAsStateWithLifecycle()
+    val useBiometrics by viewModel.useBiometrics.collectAsStateWithLifecycle()
 
     LaunchedEffect(uiState.isRegistered) {
         if (uiState.isRegistered) {
@@ -34,8 +38,8 @@ fun RegisterScreen(
             onEmailChange = viewModel::onEmailChange,
             password = password,
             onPasswordChange = viewModel::onPasswordChange,
-            passwordVisible = false,
-            onPasswordVisibilityChange = { },
+            passwordVisible = passwordVisible, // Conectado
+            onPasswordVisibilityChange = { viewModel.onPasswordVisibilityChange() }, // Conectado
             onRegisterClick = { viewModel.register(nombre, email, password) },
             onLoginClick = onNavigateToLogin,
             isLoading = uiState.isLoading,

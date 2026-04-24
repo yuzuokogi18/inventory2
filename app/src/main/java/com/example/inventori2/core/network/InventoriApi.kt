@@ -1,14 +1,15 @@
 package com.example.inventori2.core.network
 
+import com.example.inventori2.features.inventory.product_create.data.datasources.models.ProductActionRequest
+import com.example.inventori2.features.inventory.product_create.data.datasources.models.ProductActionResponse
+import com.example.inventori2.features.inventory.product_detail.data.datasources.models.ProductDetailDTO
+import com.example.inventori2.features.inventory.product_edit.data.datasources.models.ProductEditRequest
+import com.example.inventori2.features.inventory.product_list.data.datasources.models.ProductResponse
 import com.example.inventori2.features.login.data.datasources.models.LoginRequest
 import com.example.inventori2.features.login.data.datasources.models.LoginResponse
-import com.example.inventori2.features.product_create.data.datasources.models.ProductActionRequest
-import com.example.inventori2.features.product_create.data.datasources.models.ProductActionResponse
-import com.example.inventori2.features.product_list.data.datasources.models.ProductResponse
 import com.example.inventori2.features.register.data.datasources.models.RegisterRequest
 import com.example.inventori2.features.register.data.datasources.models.RegisterResponse
-import com.example.inventori2.features.product_detail.data.datasources.models.ProductDetailDTO
-import com.example.inventori2.features.product_edit.data.datasources.models.ProductEditRequest
+
 import retrofit2.http.*
 
 interface InventoriApi {

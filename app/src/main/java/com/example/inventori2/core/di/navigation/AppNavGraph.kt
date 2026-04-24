@@ -1,7 +1,6 @@
 package com.example.inventori2.core.di.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -9,12 +8,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.inventori2.features.login.presentation.screens.LoginScreen
 import com.example.inventori2.features.register.presentation.screens.RegisterScreen
-import com.example.inventori2.features.product_create.presentation.screens.CreateProductScreen
-import com.example.inventori2.features.product_detail.presentation.screens.ProductDetailScreen
-import com.example.inventori2.features.product_edit.presentation.screens.ProductEditScreen
-import com.example.inventori2.features.product_list.presentation.screens.ProductsScreen
+import com.example.inventori2.features.inventory.product_create.presentation.screens.CreateProductScreen
+import com.example.inventori2.features.inventory.product_detail.presentation.screens.ProductDetailScreen
+import com.example.inventori2.features.inventory.product_edit.presentation.screens.ProductEditScreen
+import com.example.inventori2.features.inventory.product_list.presentation.screens.ProductsScreen
 import com.example.inventori2.features.dashboard.presentation.screens.DashboardScreen
 import com.example.inventori2.features.profile.presentation.screens.ProfileScreen
+import com.example.inventori2.features.compras.presentation.screens.ShoppingScreen
+import com.example.inventori2.features.estadisticas.presentation.screens.StatsScreen
+import com.example.inventori2.features.notification.presentation.screens.NotificationScreen
 
 @Composable
 fun AppNavGraph(
@@ -50,7 +52,34 @@ fun AppNavGraph(
         composable(AppRoutes.Dashboard.route) {
             DashboardScreen(
                 onNavigateToList = { navController.navigate(AppRoutes.ProductList.route) },
-                onNavigateToProfile = { navController.navigate(AppRoutes.Profile.route) } // Vinculado
+                onNavigateToProfile = { navController.navigate(AppRoutes.Profile.route) },
+                onNavigateToCreate = { navController.navigate(AppRoutes.CreateProduct.route) },
+                onNavigateToShopping = { navController.navigate(AppRoutes.Shopping.route) },
+                onNavigateToStats = { navController.navigate(AppRoutes.Stats.route) },
+                onNavigateToNotifications = { navController.navigate(AppRoutes.Notifications.route) }
+            )
+        }
+
+        composable(AppRoutes.Shopping.route) {
+            ShoppingScreen(
+                onNavigateToInicio = { navController.navigate(AppRoutes.Dashboard.route) },
+                onNavigateToInventory = { navController.navigate(AppRoutes.ProductList.route) },
+                onNavigateToProfile = { navController.navigate(AppRoutes.Profile.route) }
+            )
+        }
+
+        composable(AppRoutes.Stats.route) {
+            StatsScreen(
+                onNavigateToInicio = { navController.navigate(AppRoutes.Dashboard.route) },
+                onNavigateToInventory = { navController.navigate(AppRoutes.ProductList.route) },
+                onNavigateToShopping = { navController.navigate(AppRoutes.Shopping.route) },
+                onNavigateToProfile = { navController.navigate(AppRoutes.Profile.route) }
+            )
+        }
+
+        composable(AppRoutes.Notifications.route) {
+            NotificationScreen(
+                onBackClick = { navController.popBackStack() }
             )
         }
 
@@ -67,6 +96,9 @@ fun AppNavGraph(
 
         composable(AppRoutes.ProductList.route) {
             ProductsScreen(
+                onNavigateToInicio = { navController.navigate(AppRoutes.Dashboard.route) },
+                onNavigateToShopping = { navController.navigate(AppRoutes.Shopping.route) },
+                onNavigateToProfile = { navController.navigate(AppRoutes.Profile.route) },
                 onCreateProductClick = { navController.navigate(AppRoutes.CreateProduct.route) },
                 onEditClick = { id -> navController.navigate(AppRoutes.EditProduct.createRoute(id)) },
                 onViewClick = { id -> navController.navigate(AppRoutes.ProductDetail.createRoute(id)) }

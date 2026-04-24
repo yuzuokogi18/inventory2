@@ -29,9 +29,25 @@ class RegisterViewModel @Inject constructor(
     private val _password = MutableStateFlow("")
     val password = _password.asStateFlow()
 
+    // Estado para visibilidad de contraseña
+    private val _passwordVisible = MutableStateFlow(false)
+    val passwordVisible = _passwordVisible.asStateFlow()
+
+    // Preferencia de biometría
+    private val _useBiometrics = MutableStateFlow(true)
+    val useBiometrics = _useBiometrics.asStateFlow()
+
     fun onNombreChange(value: String) { _nombre.value = value }
     fun onEmailChange(value: String) { _email.value = value }
     fun onPasswordChange(value: String) { _password.value = value }
+    
+    fun onPasswordVisibilityChange() {
+        _passwordVisible.value = !_passwordVisible.value
+    }
+
+    fun onBiometricsChange(enabled: Boolean) {
+        _useBiometrics.value = enabled
+    }
 
     fun register(nombre: String, email: String, pss: String) {
         _uiState.update { it.copy(isLoading = true, error = null) }
@@ -46,7 +62,10 @@ class RegisterViewModel @Inject constructor(
             val result = registerUseCase(request)
             _uiState.update { currentState ->
                 result.fold(
-                    onSuccess = { currentState.copy(isLoading = false, isRegistered = true) }, // Corregido: isSuccess -> isRegistered
+                    onSuccess = { 
+                        // Aquí se marcaría el éxito del registro
+                        currentState.copy(isLoading = false, isRegistered = true) 
+                    },
                     onFailure = { error -> currentState.copy(isLoading = false, error = error.message) }
                 )
             }
